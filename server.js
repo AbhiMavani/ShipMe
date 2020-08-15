@@ -26,6 +26,7 @@ var Answer = require('./Data/Model/answer');
 var Solutions = require('./Data/Model/solution');
 var Ranking = require('./Data/Model/ranking');
 var Like = require('./Data/Model/likes');
+var Test = require('./Data/Model/test');
 
 
 
@@ -72,7 +73,6 @@ app.use((err, req, res, next) => {
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, './uploads');
-        console.log("Called...");
     },
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now())
@@ -80,6 +80,7 @@ var storage = multer.diskStorage({
 });
 
 var upload = multer({ storage: storage });
+
 
 
 passport.use(new localStrategy({ usernameField: 'user_name' },
@@ -734,40 +735,28 @@ app.post('/addproblem', function(req, res) {
 
 });
 
-app.post('/api/upload', upload.single('picture'), function(req, res) {
+
+app.post('/addshipment', upload.single('file'), function(req, res) {
+    //console.log(req.body);
     var img = fs.readFileSync(req.file.path);
     var encode_image = img.toString('base64');
     // Define a JSONobject for the image attributes for saving to database
 
-    var finalImg = {
+    var file1 = {
         contentType: req.file.mimetype,
         image: new Buffer(encode_image, 'base64')
     };
-    db.collection('shipments').insertOne(finalImg, (err, result) => {
-        console.log(result)
-
-        if (err) return console.log(err);
-
-        console.log('saved to database');
-        res.redirect('/');
-
-
-    })
-});
-
-app.post('/addshipment', function(req, res) {
-    console.log(req.body);
-    let obj = new Shipment({
+    var obj = new Shipment({
         shipmentName: req.body.shipmentName,
         shipmentCode: req.body.shipmentCode,
-        shipmentImage: req.body.shipmentImage,
         shipmentType: req.body.shipmentType,
+        budget: req.body.budget,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         fromCollection: req.body.fromCollection,
         toDelivery: req.body.toDelivery
     });
-    console.log(obj);
+    obj.shipmentImage = file1;
 
     obj.save(function(error, doc) {
         if (!error)
@@ -777,7 +766,6 @@ app.post('/addshipment', function(req, res) {
             res.status(422).send([error]);
         }
     });
-    // res.status(200).send({ "message": "Shipment added successfully" });
 });
 
 app.get('/problems', function(req, res) {
@@ -796,8 +784,8 @@ app.get('/problems', function(req, res) {
 
 app.get('/shipments', function(req, res) {
     Shipment.find({}, function(error, data) {
-        //console.log(contestData);
         if (!error) {
+            //console.log(res);
             return res.send(data);
         } else {
             console.log("oh my god");

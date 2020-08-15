@@ -1,9 +1,10 @@
 import { Component, OnInit,HostListener,Directive  } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { FormGroup, FormControl,Validators,AbstractControl  } from '@angular/forms';
 import { DataService } from '../../../services/data.service';
-import {  FileUploader } from 'ng2-file-upload';
 import * as $ from 'jquery';
+import { formatDate } from '@angular/common';
 
 export interface Tile {
   id: number,
@@ -11,7 +12,6 @@ export interface Tile {
   path:  string
 }
 
-const uploadAPI = 'http://localhost:3000/api/upload';
 
 @Component({
   selector: 'app-create-shipment',
@@ -21,15 +21,18 @@ const uploadAPI = 'http://localhost:3000/api/upload';
 @Directive({selector: 'img[changeColor]'})
 export class CreateShipmentComponent implements OnInit {
 
-  public shipmentCode: any;
-  public shipmentName: any;
-  public shipmentType: any;
-  public fromCollection: any;
-  public toDelivery: any;
-  public shipmentImage: File;
-  public startDate: any;
-  public endDate: any;
-  data;
+  dataForm = new FormGroup({
+    shipmentCode:  new FormControl(' '),
+    shipmentName: new FormControl(' '),
+    shipmentType: new FormControl(' '),
+    fromCollection:new FormControl(' '),
+    budget: new FormControl(''),
+    toDelivery:new FormControl(' '),
+    shipmentImage:new FormControl(' '),
+    startDate:new FormControl(''),
+    endDate:new FormControl(' '),
+  });
+
   defFile;
    changeText: boolean = false
    tiles: Tile[] = [
@@ -57,14 +60,7 @@ export class CreateShipmentComponent implements OnInit {
   
     }
 
-    public uploader: FileUploader = new FileUploader({ url: uploadAPI, itemAlias: 'file' });
-
   ngOnInit() {
-    this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
-    this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-         console.log('FileUpload:uploaded successfully:', item.file.name);
-         alert('Your file has been uploaded successfully');
-    };
     $(document).on('click', '.browse', function() {
       let file;
       file = $(this).parent().parent().parent().find('.file');
@@ -85,30 +81,33 @@ export class CreateShipmentComponent implements OnInit {
   }
 
   closeModal(id) {
-    this.shipmentType = this.tiles[id].name;
+    this.dataForm.get('shipmentType').setValue(this.tiles[id].name);
+  }
+
+  get dataFormControl() {
+    return this.dataForm.controls;
   }
   
 
   onSubmit() {
-    this.shipmentCode = 'ABC';
+    this.dataForm.get('shipmentCode').setValue('ABC');
+    const formData = new FormData();
     if (this.defFile === '') {
       if (this.defFile === '') {
         this.toastr.error('Please upload Shipment Image');
       }
     } else {
-      this.data = {
-        shipmentCode:  this.shipmentCode,
-        shipmentName: this.shipmentName,
-        shipmentType: this.shipmentType,
-        fromCollection: this.fromCollection,
-        toDelivery: this.toDelivery,
-        startDate: this.startDate,
-        endDate: this.endDate,
-      };
-
-      console.log(this.data);
-
-      this._dataService.postShipment(this.data).subscribe(
+        formData.append('file', this.dataForm.get('shipmentImage').value);
+        formData.append('shipmentCode',this.dataForm.get('shipmentCode').value);
+        formData.append('shipmentName',this.dataForm.get('shipmentName').value);
+        formData.append('shipmentType',this.dataForm.get('shipmentType').value);
+        formData.append('budget',this.dataForm.get('budget').value);
+        formData.append('fromCollection',this.dataForm.get('fromCollection').value);
+        formData.append('toDelivery',this.dataForm.get('toDelivery').value);
+        formData.append('startDate',this.dataForm.get('startDate').value);
+        formData.append('endDate',this.dataForm.get('endDate').value);
+      };    
+      this._dataService.postShipment(formData).subscribe(
         status => {
           this.toastr.success('Shipment Added successfuly');
           this.router.navigate( [ '/home'] );
@@ -118,20 +117,14 @@ export class CreateShipmentComponent implements OnInit {
         }
       );
     }
+    onFileSelect(event) {
+      if (event.target.files.length > 0) {
+        const file = event.target.files[0];
+        this.dataForm.get('shipmentImage').setValue(file);
+      }
+    }
   }
 
-  imageUpload(event) {
-    let fileList: FileList = event.target.files;
-    const file: File = fileList[0];
-    console.log(file);
-    var reader = new FileReader();
-    reader.onloadend = this._handleReaderLoaded.bind(this);
-    reader.readAsDataURL(file);
-  }
-  _handleReaderLoaded(e) {
-    let reader = e.target;
-    var base64result = reader.result;
-    this.shipmentImage= base64result;
-  }
-}
+
+
 

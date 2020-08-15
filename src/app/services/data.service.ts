@@ -64,8 +64,8 @@ export class DataService {
     return this._http.get<any>(environment.apiEndPoint.concat('/getSolutionHistoryById'), {headers : {'userid' : data, 'NoAuth' : 'True' }});
   }
 // ######################### For ShipME ###################
-  postShipment(data) {
-    return this._http.post<any>(environment.apiEndPoint + '/addshipment', data);
+  postShipment(formData) {
+    return this._http.post<any>(environment.apiEndPoint + '/addshipment', formData);
   }
 
   getShipments() {

@@ -20,57 +20,66 @@
             </div>
             <div class="row">
                 <div class="col-lg-6">
-                    <form role="form" #data="ngForm" (ngSubmit)="onSubmit()" novalidate enctype="multipart/form-data">
+                    <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
 
                         <!-- {{data.value | json}} -->
                         <div class="form-group">
                             <label>Shipment Name</label>
-                            <input class="form-control is-invalid" #sname="ngModel" [class.is-invalid]="sname.invalid && sname.touched" type='text' name="sname" [(ngModel)]="shipmentName" required>
-                            <small class="text-danger" [class.d-none]="sname.untouched || sname.valid">Shipment name is
-                              required</small>
+                            <input class="form-control" formControlName="shipmentName" type='text' required>
+                            <!-- <small *ngIf="dataFormControl.shipmentName.touched && dataFormControl.shipmentName==''" class="text-danger">Shipment name is
+                              required</small> -->
                         </div>
 
                         <div class="form-group">
                             <label>Shipment Type</label>
-                            <input class="form-control is-invalid" #type="ngModel" data-toggle="modal" data-target="#selectCategory" [class.is-invalid]="type.invalid && type.touched" name="type" [(ngModel)]="shipmentType" value="shipmentType" required>
-                            <small class="text-danger" [class.d-none]="type.untouched || type.valid">Shipment type is
-                              required</small>
+                            <input class="form-control" data-toggle="modal" data-target="#selectCategory" formControlName="shipmentType" required>
+                            <!-- <small class="text-danger" *ngIf="dataFormControl.shipmentType.touched || dataFormControl.shipmentType.invalid">Shipment type is
+                              required</small> -->
+                        </div>
+
+                        <div class="form-group">
+                            <label>Budget</label>
+                            <input class="form-control" formControlName="budget" type='text' required>
+                            <!-- <small class="text-danger" *ngIf="dataFormControl.shipmentType.touched || dataFormControl.shipmentType.invalid">Shipment type is
+                              required</small> -->
                         </div>
 
                         <div class="form-group">
                             <label>Pick Up Address</label>
                             <div class=" input-group">
                                 <span class="input-group-addon"> <i class="fa fa-map-marker" style="color: green; font-size: 20px;"></i></span>
-                                <input class="form-control is-invalid" #fCollection="ngModel" [class.is-invalid]="fCollection.invalid && fCollection.touched" type='text' name="fCollection" [(ngModel)]="fromCollection" placeholder="Collection Postcode or Town" required>
+                                <input class="form-control" type='text' name="fCollection" formControlName="fromCollection" placeholder="Collection Postcode or Town" required>
                             </div>
-                            <small class="text-danger" [class.d-none]="fCollection.untouched || fCollection.valid">Pick Up Address is
-                                required</small>
+                            <!-- <small class="text-danger" *ngIf="dataFormControl.fromCollection.touched || dataFormControl.fromCollection.invalid">Pick Up Address is
+                                required</small> -->
                         </div>
 
                         <div class="form-group">
                             <label>Shiping Address</label>
                             <div class=" input-group">
                                 <span class="input-group-addon"> <i class="fa fa-map-marker" style="color:red; font-size: 20px;"></i></span>
-                                <input class="form-control is-invalid" #tDelivery="ngModel" [class.is-invalid]="tDelivery.invalid && tDelivery.touched" type='text' name="tDelivery" [(ngModel)]="toDelivery" placeholder="Delivery Postcode or Town" required>
+                                <input class="form-control" type='text' name="tDelivery" formControlName="toDelivery" placeholder="Delivery Postcode or Town" required>
 
                             </div>
-                            <small class="text-danger" [class.d-none]="tDelivery.untouched || tDelivery.valid">Delivery Address is
-                                required</small>
+                            <!-- <small class="text-danger" *ngIf="dataFormControl.toDelivery.touched || dataFormControl.toDelivery.invalid">Delivery Address is
+                                required</small> -->
                         </div>
                         <label>Prefferd Delivery Timeframe</label>
                         <div class="form-group">
                             <label>Start Date</label>
                             <div class=" input-groupdate" id="datetimepicker3">
-
-                                <input class="form-control" type="date" [min]="currentDate" name="startDate" [(ngModel)]="startDate" required>
+                                <input class="form-control" type="date" [min]="currentDate" name="startDate" formControlName="startDate" required>
+                                <!-- <small class="text-danger" *ngIf="dataFormControl.startDate.touched || dataFormControl.startDate.invalid">Delivery Address is
+                                    required</small> -->
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>End Date</label>
                             <div class=" input-groupdate" id="datetimepicker3">
-
-                                <input class="form-control" type="date" [min]="currentDate" name="endDate" [(ngModel)]="endDate" required>
+                                <input class="form-control" type="date" [min]="currentDate" name="endDate" formControlName="endDate" required>
+                                <!-- <small class="text-danger" *ngIf="dataFormControl.endDate.touched || dataFormControl.endDate.invalid">Delivery Address is
+                                    required</small> -->
                             </div>
                         </div>
 
@@ -103,26 +112,17 @@
                         </div>
 
                         <div class="form-group">
-                            <input type="file" name="myImage" accept="image/*" />
+                            <label> Upload Shipment Image
+                            </label>
+                            <label class="btn btn-warning" style="margin-left: 10px;"><i
+                                class="glyphicon glyphicon-search"></i> Browse
+                                <input type="file" (change)="onFileSelect($event)" accept="image/*" required/>
+                            </label>
                         </div>
-
-                        <!-- <div class="form-group">
-                            <input type="file" name="file" class="file" ng2FileSelect [uploader]="uploader">
-                            <div class="input-group col-xs-12">
-                                <span class="input-group-addon" style="width: 100px">Shipment Image</span>
-                                <input type="text" class="form-control input" disabled placeholder="Choose File">
-                                <span class="input-group-btn">
-                                    <button class="browse btn btn-warning input" type="button" (click)="uploader.uploadAll()" 
-                                    ><i
-                                            class="glyphicon glyphicon-search"></i>
-                                        Browse</button>
-                                </span>
-                            </div>
-                        </div> -->
 
                         <div class="row">
                             <div class="col-xs-6 text-center">
-                                <button type="submit" class="btn btn-success" style="width: 100px" [disabled]=" !data.form.valid ">Submit</button>
+                                <button type="submit" class="btn btn-success" style="width: 100px" [disabled]=" !dataForm.valid ">Submit</button>
                             </div>
 
                             <div class="col-xs-6 text-center ">

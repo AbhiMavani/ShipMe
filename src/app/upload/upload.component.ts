@@ -29,6 +29,7 @@ export class UploadComponent implements OnInit {
   onSubmit() {
     const formData = new FormData();
     formData.append('file', this.uploadForm.get('profile').value);
+    console.log(formData.get('file'));
 
     this.httpClient.post<any>(this.SERVER_URL, formData).subscribe(
       (res) => console.log(res),
