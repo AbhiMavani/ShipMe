@@ -7,6 +7,7 @@ let img = new Schema({
 });
 
 let Shipment = new Schema({
+    user_name: String,
     shipmentCode: String,
     shipmentName: String,
     shipmentType: String,

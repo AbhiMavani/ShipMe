@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormControl,Validators,AbstractControl  } from '@angular/forms';
 import { DataService } from '../../../services/data.service';
+import { UserService } from '../../../services/user.service';
 import * as $ from 'jquery';
 import { formatDate } from '@angular/common';
 
@@ -34,6 +35,8 @@ export class CreateShipmentComponent implements OnInit {
   });
 
   defFile;
+  isNotLogin = true;
+  userId;
    changeText: boolean = false
    tiles: Tile[] = [
      {id : 0, name: 'Furnitures & General Items',path: './../../../../assets/images/cat_0.svg'},
@@ -56,11 +59,15 @@ export class CreateShipmentComponent implements OnInit {
 
 
     constructor(private _dataService: DataService, private toastr: ToastrService,
-      private route: ActivatedRoute, private router: Router) {
+      private route: ActivatedRoute, private router: Router,private _userService:UserService) {
   
     }
 
   ngOnInit() {
+    if (this._userService.isLoggedIn()){
+      this.userId = this._userService.getUserPayload().user_name;
+      this.isNotLogin = false;
+    }
     $(document).on('click', '.browse', function() {
       let file;
       file = $(this).parent().parent().parent().find('.file');
@@ -97,6 +104,7 @@ export class CreateShipmentComponent implements OnInit {
         this.toastr.error('Please upload Shipment Image');
       }
     } else {
+      formData.append('user_name', this.userId);
         formData.append('file', this.dataForm.get('shipmentImage').value);
         formData.append('shipmentCode',this.dataForm.get('shipmentCode').value);
         formData.append('shipmentName',this.dataForm.get('shipmentName').value);

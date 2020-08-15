@@ -747,6 +747,7 @@ app.post('/addshipment', upload.single('file'), function(req, res) {
         image: new Buffer(encode_image, 'base64')
     };
     var obj = new Shipment({
+        user_name: req.body.user_name,
         shipmentName: req.body.shipmentName,
         shipmentCode: req.body.shipmentCode,
         shipmentType: req.body.shipmentType,

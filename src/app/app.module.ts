@@ -61,6 +61,7 @@ import { RankingComponent } from './ranking/ranking.component';
 import { ViewFileComponent } from './ide/view-file/view-file.component';
 import { RegiUserComponent } from './authentication/registration/regi-user/regi-user.component';
 import { UploadComponent } from './upload/upload.component';
+import { ViewShipmentComponent } from './customer/ManageShipments/view-shipment/view-shipment.component';
 
 
 
@@ -163,6 +164,7 @@ const routes: Routes = [
     CreateShipmentComponent,
     ManageShipmentComponent,
     UploadComponent,
+    ViewShipmentComponent,
 
 
   ],
