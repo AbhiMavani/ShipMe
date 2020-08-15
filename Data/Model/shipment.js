@@ -1,6 +1,11 @@
 const mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
+let img = new Schema({
+    image: Buffer,
+    contentType: String
+});
+
 let Shipment = new Schema({
     shipmentCode: {
         type: String,
@@ -28,10 +33,10 @@ let Shipment = new Schema({
         type: String
     },
     endDate: {
-
+        type: String,
     },
     shipmentImage: {
-        type: String
+        type: img,
     }
 });
 

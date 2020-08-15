@@ -26,7 +26,7 @@ export class CreateShipmentComponent implements OnInit {
   public shipmentType: any;
   public fromCollection: any;
   public toDelivery: any;
-  public shipmentImage: string;
+  public shipmentImage: File;
   public startDate: any;
   public endDate: any;
   data;
@@ -104,7 +104,6 @@ export class CreateShipmentComponent implements OnInit {
         toDelivery: this.toDelivery,
         startDate: this.startDate,
         endDate: this.endDate,
-        // shipmentImage:this.shipmentImage,
       };
 
       console.log(this.data);

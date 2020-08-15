@@ -1,7 +1,7 @@
  // built-in
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule  } from '@angular/forms';
 import { Routes, RouterModule} from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
@@ -60,6 +60,7 @@ import { CompileAndRunComponent } from './ide/compile-and-run/compile-and-run.co
 import { RankingComponent } from './ranking/ranking.component';
 import { ViewFileComponent } from './ide/view-file/view-file.component';
 import { RegiUserComponent } from './authentication/registration/regi-user/regi-user.component';
+import { UploadComponent } from './upload/upload.component';
 
 
 
@@ -76,6 +77,7 @@ const routes: Routes = [
   {path:'regiuser', component:RegiUserComponent},
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'upload', component: UploadComponent },
 
   // User Profile
   { path: 'profile', component: ProfileComponent , canActivate: [AuthGuard]},
@@ -160,6 +162,7 @@ const routes: Routes = [
     //User Shipment
     CreateShipmentComponent,
     ManageShipmentComponent,
+    UploadComponent,
 
 
   ],
@@ -168,6 +171,7 @@ const routes: Routes = [
     BrowserModule,
     LoadingBarModule,
     FormsModule,
+    ReactiveFormsModule ,
     HttpClientModule,
     BrowserAnimationsModule,
     SelectDropDownModule,
