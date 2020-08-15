@@ -11,6 +11,10 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import { LoadingBarModule } from '@ngx-loading-bar/core';
 import {MatTableModule, MatDialogModule, MatGridListModule} from '@angular/material';
 import { FileUploadModule } from 'ng2-file-upload';
+import { MatPaginatorModule, MatButtonModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatRippleModule } from '@angular/material';
 
 // components
 import { AppComponent } from './app.component';
@@ -94,7 +98,7 @@ const routes: Routes = [
   { path: 'contest/:id/:pid', component: ViewContestProblemComponent },
   { path: 'rankings/:id', component: RankingComponent },
   { path: 'viewsolution/:username/:solutionID', component: ViewFileComponent },
-  
+
   //
   { path: 'customer/shipment', component: ManageShipmentComponent , canActivate: [AuthGuard]},
   { path: 'customer/shipment/create', component: CreateShipmentComponent , canActivate: [AuthGuard]},
@@ -181,6 +185,8 @@ const routes: Routes = [
     MatGridListModule,
     FileUploadModule,
     ToastrModule.forRoot(),
+    MatPaginatorModule,
+    MatFormFieldModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
