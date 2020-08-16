@@ -47,6 +47,23 @@
         </table> -->
 
                     </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group col-md-4">
+                            <label for="inputState">Select Filter</label>
+                            <select (change)="setFilter($event.target.value)" id="inputState" class="form-control">
+                            <option value="shipmentName" selected>Item</option>
+                            <option value="fromCollection">Collection</option>
+                            <option value="toDelivery">Delivery</option>
+                          </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Search</label>
+                            <input (keyup)="applyFilter($event.target.value)" type="text" class="form-control" id="inputCity">
+                        </div>
+                    </div>
+
                     <table mat-table [dataSource]="data" class="mat-elevation-z8 center">
 
                         <!--- Note that these columns can be defined in any order.
@@ -81,6 +98,8 @@
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
+                    <mat-paginator [pageSizeOptions]="[3, 10, 20]" showFirstLastButtons></mat-paginator>
+                    <!-- <mat-paginator -->
                 </div>
             </div>
             <br>

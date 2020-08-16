@@ -11,6 +11,8 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import { LoadingBarModule } from '@ngx-loading-bar/core';
 import {MatTableModule, MatDialogModule, MatGridListModule} from '@angular/material';
 import { FileUploadModule } from 'ng2-file-upload';
+import { MatPaginatorModule, MatButtonModule,
+  MatFormFieldModule, } from '@angular/material';
 
 // components
 import { AppComponent } from './app.component';
@@ -183,6 +185,8 @@ const routes: Routes = [
     MatGridListModule,
     FileUploadModule,
     ToastrModule.forRoot(),
+    MatPaginatorModule,
+    MatFormFieldModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
