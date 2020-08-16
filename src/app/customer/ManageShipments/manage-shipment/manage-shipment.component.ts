@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from '../../../services/data.service';
-import { Router, ActivatedRoute} from '@angular/router';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
+import { Router, ActivatedRoute} from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as $ from 'jquery';
 import { Shipment } from 'src/app/Class/shipment';
 
@@ -14,8 +14,6 @@ export interface PeriodicElement {
   weight: number;
   symbol: string;
 }
-
-
 
 
 @Component({
@@ -48,7 +46,7 @@ export class ManageShipmentComponent implements OnInit {
       return window.btoa(binary);
   }
     ngOnInit() {
-      this._dataService.getShipments().subscribe(
+        this._dataService.getShipments().subscribe(
         status => {
           this.data = status;
           this.dataSource =new MatTableDataSource<Shipment>(status);
@@ -57,6 +55,9 @@ export class ManageShipmentComponent implements OnInit {
             this.user_photo =  this.sanitizer.bypassSecurityTrustResourceUrl('data:' + element.shipmentImage.contentType + ';base64,' + this.arrayBufferToBase64(element.shipmentImage.image.data));
             element.imgURL = this.user_photo;
           });
+          this.dataSource = new MatTableDataSource<Shipment>(status);
+          this.dataSource.paginator = this.paginator;
+
           this.dataSource.filterPredicate = (data: Shipment, filtersJson: string) => {
             const matchFilter = [];
             const filters = JSON.parse(filtersJson);
@@ -67,10 +68,11 @@ export class ManageShipmentComponent implements OnInit {
             });
               return matchFilter.every(Boolean);
           };
+
         },
+
         err => {}
       );
-  
     }
 
 
@@ -95,11 +97,9 @@ export class ManageShipmentComponent implements OnInit {
 
     onShipmentSelect(shipment) {
       console.log("Event Creted");
-      console.log(this.router);
-      this.router.navigate(['/home', shipment.shipmentName]);
+      console.log(shipment);
+      // this.router.navigate(['/customer/shipment', shipment.shipment_name]);
     }
-
-    
 
 
 }

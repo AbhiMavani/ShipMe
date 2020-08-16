@@ -12,7 +12,9 @@ import { LoadingBarModule } from '@ngx-loading-bar/core';
 import {MatTableModule, MatDialogModule, MatGridListModule} from '@angular/material';
 import { FileUploadModule } from 'ng2-file-upload';
 import { MatPaginatorModule, MatButtonModule,
-  MatFormFieldModule, } from '@angular/material';
+  MatFormFieldModule,
+  MatInputModule,
+  MatRippleModule } from '@angular/material';
 
 // components
 import { AppComponent } from './app.component';
@@ -63,7 +65,6 @@ import { RankingComponent } from './ranking/ranking.component';
 import { ViewFileComponent } from './ide/view-file/view-file.component';
 import { RegiUserComponent } from './authentication/registration/regi-user/regi-user.component';
 import { UploadComponent } from './upload/upload.component';
-import { ViewShipmentComponent } from './customer/ManageShipments/view-shipment/view-shipment.component';
 
 
 
@@ -97,7 +98,7 @@ const routes: Routes = [
   { path: 'contest/:id/:pid', component: ViewContestProblemComponent },
   { path: 'rankings/:id', component: RankingComponent },
   { path: 'viewsolution/:username/:solutionID', component: ViewFileComponent },
-  
+
   //
   { path: 'customer/shipment', component: ManageShipmentComponent , canActivate: [AuthGuard]},
   { path: 'customer/shipment/create', component: CreateShipmentComponent , canActivate: [AuthGuard]},
@@ -166,7 +167,6 @@ const routes: Routes = [
     CreateShipmentComponent,
     ManageShipmentComponent,
     UploadComponent,
-    ViewShipmentComponent,
 
 
   ],
