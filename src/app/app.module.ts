@@ -14,7 +14,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { MatPaginatorModule, MatButtonModule,
   MatFormFieldModule,
   MatInputModule,
-  MatRippleModule } from '@angular/material';
+  MatRippleModule,MatCardModule } from '@angular/material';
 
 // components
 import { AppComponent } from './app.component';
@@ -41,6 +41,7 @@ import { ForgetPasswordComponent } from './authentication/forget-password/forget
 import { ResetPasswordComponent } from './authentication/reset-password/reset-password.component';
 import { CreateShipmentComponent } from './customer/ManageShipments/create-shipment/create-shipment.component';
 import { ManageShipmentComponent } from './customer/ManageShipments/manage-shipment/manage-shipment.component';
+import { ViewShipmentComponent } from './customer/ManageShipments/view-shipment/view-shipment.component';
 
 // services
 import { UserService } from './services/user.service';
@@ -99,9 +100,10 @@ const routes: Routes = [
   { path: 'rankings/:id', component: RankingComponent },
   { path: 'viewsolution/:username/:solutionID', component: ViewFileComponent },
 
-  //
+  //customer
   { path: 'customer/shipment', component: ManageShipmentComponent , canActivate: [AuthGuard]},
   { path: 'customer/shipment/create', component: CreateShipmentComponent , canActivate: [AuthGuard]},
+  { path: 'customer/shipment/:id', component: ViewShipmentComponent , canActivate: [AuthGuard]},
 
   // practice
   { path: 'practice', component: PracticeComponent },
@@ -166,6 +168,7 @@ const routes: Routes = [
     //User Shipment
     CreateShipmentComponent,
     ManageShipmentComponent,
+    ViewShipmentComponent,
     UploadComponent,
 
 
@@ -182,6 +185,7 @@ const routes: Routes = [
     NgxPaginationModule,
     MatTableModule,
     MatDialogModule,
+    MatCardModule,
     MatGridListModule,
     FileUploadModule,
     ToastrModule.forRoot(),

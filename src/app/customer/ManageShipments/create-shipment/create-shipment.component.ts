@@ -22,6 +22,7 @@ export interface Tile {
 @Directive({selector: 'img[changeColor]'})
 export class CreateShipmentComponent implements OnInit {
 
+  sCode:String;
   dataForm = new FormGroup({
     shipmentCode:  new FormControl(' '),
     shipmentName: new FormControl(' '),
@@ -33,7 +34,6 @@ export class CreateShipmentComponent implements OnInit {
     startDate:new FormControl(''),
     endDate:new FormControl(' '),
   });
-
   defFile;
   isNotLogin = true;
   userId;
@@ -66,7 +66,7 @@ export class CreateShipmentComponent implements OnInit {
   ngOnInit() {
     if (this._userService.isLoggedIn()){
       this.userId = this._userService.getUserPayload().user_name;
-      this.isNotLogin = false;
+      this.isNotLogin = false;  
     }
     $(document).on('click', '.browse', function() {
       let file;
@@ -97,7 +97,8 @@ export class CreateShipmentComponent implements OnInit {
   
 
   onSubmit() {
-    this.dataForm.get('shipmentCode').setValue('ABC');
+    this.sCode = (this.userId.trim().concat(this.dataForm.get('shipmentName').value.trim().slice(0,5).toString())).toUpperCase();
+    this.dataForm.get('shipmentCode').setValue(this.sCode);
     const formData = new FormData();
     if (this.defFile === '') {
       if (this.defFile === '') {

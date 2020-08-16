@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from '../../../services/data.service';
+import { UserService } from '../../../services/user.service';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
+import {MatTableDataSource,MatCardModule} from '@angular/material';
 import { Router, ActivatedRoute} from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as $ from 'jquery';
@@ -26,12 +27,15 @@ export class ManageShipmentComponent implements OnInit {
   dataSource: MatTableDataSource<Shipment>;
   filterSelector: String;
   user_photo: SafeResourceUrl;
+  userId;
+  isNotLogin;
   abhi: String;
   displayedColumns: string[] = ['item', 'collection', 'delivery', 'date'];
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   constructor(private _dataService: DataService, private toastr: ToastrService,
-    private route: ActivatedRoute, private router: Router,private sanitizer: DomSanitizer) {
+    private route: ActivatedRoute, private router: Router,private sanitizer: DomSanitizer,
+    private _userService: UserService) {
       this.filterSelector = "shipmentName";
 
      }
@@ -46,7 +50,11 @@ export class ManageShipmentComponent implements OnInit {
       return window.btoa(binary);
   }
     ngOnInit() {
-        this._dataService.getShipments().subscribe(
+      if (this._userService.isLoggedIn()){
+        this.userId = this._userService.getUserPayload().user_name;
+        this.isNotLogin = false;  
+      }
+        this._dataService.getShipmentById(this.userId).subscribe(
         status => {
           this.data = status;
           this.dataSource =new MatTableDataSource<Shipment>(status);
@@ -98,7 +106,7 @@ export class ManageShipmentComponent implements OnInit {
     onShipmentSelect(shipment) {
       console.log("Event Creted");
       console.log(shipment);
-      // this.router.navigate(['/customer/shipment', shipment.shipment_name]);
+      this.router.navigate(['/customer/shipment', shipment.shipmentCode]);
     }
 
 

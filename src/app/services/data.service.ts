@@ -75,6 +75,11 @@ export class DataService {
   getShipment(data) {
     return this._http.get<any>(environment.apiEndPoint + '/shipment?shipmentCode=' + data);
   }
+
+  getShipmentById(data) {
+    // tslint:disable-next-line:max-line-length
+    return this._http.get<any>(environment.apiEndPoint.concat('/getShipmentById'), {headers : {'userid' : data, 'NoAuth' : 'True' }});
+  }
   
 
 }

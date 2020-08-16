@@ -782,7 +782,7 @@ app.get('/problems', function(req, res) {
     });
 });
 
-
+/// To get all Shipments
 app.get('/shipments', function(req, res) {
     Shipment.find({}, function(error, data) {
         if (!error) {
@@ -795,6 +795,17 @@ app.get('/shipments', function(req, res) {
 
     });
 });
+
+/// To get Shipment By Customer ID
+app.get('/getShipmentById', function(req, res) {
+    Shipment.find({ user_name: req.headers.userid }, function(error, result) {
+        if (!error) {
+            return res.send(result);
+        } else {
+            return res.send(error);
+        }
+    }).sort({ DateTime: -1 });
+})
 
 app.get('/problem', function(req, res) {
     testcase = '';

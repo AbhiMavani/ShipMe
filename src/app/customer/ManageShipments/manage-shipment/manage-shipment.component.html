@@ -22,31 +22,6 @@
      </label>
                     <br>
                     <br>
-                    <div class="table-responsive">
-                        <!-- <table  class="table table-striped table-bordered table-condensed " cellspacing="0" width="100%">
-           <thead >
-              <tr>
-                 <th>Shipment Code</th>
-                 <th>Shipment Name</th>
-                 <th>Shipment Type</th>
-                 <th class="text-center">Operations </th>
-              </tr>
-           </thead>
-           <tbody>    
-              <tr *ngFor="let i of data" (click)="onShipmentSelect(i)">
-                 <td style="padding-top:12px;">{{i.shipmentCode}}</td>
-                 <td style="padding-top:12px;">{{i.shipmentName}}</td>
-                 <td style="padding-top:12px;">{{i.shipmentType}}</td>
-                 <td class="text-center">
-                    <button class="btn btn-success btn-sm" style="width: 80px"><i class="fa fa-eye"> </i>&nbsp;View</button>
-                 </td>
-                 
-              </tr>
-              
-           </tbody>
-        </table> -->
-
-                    </div>
 
                     <div class="form-row">
 
@@ -64,7 +39,7 @@
                         </div>
                     </div>
 
-                    <table mat-table [dataSource]="data" class="mat-elevation-z8 center">
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 center">
 
                         <!--- Note that these columns can be defined in any order.
             The actual rendered columns are set as a property on the row definition" -->
@@ -72,7 +47,7 @@
                         <!-- Position Column -->
                         <ng-container matColumnDef="item">
                             <th mat-header-cell *matHeaderCellDef> Item </th>
-                            <td mat-cell *matCellDef="let data" (click)="onShipmentSelect(element)">
+                            <td mat-cell *matCellDef="let data" class="shipment" (click)="onShipmentSelect(data)">
                                 <img class="myImg" [src]="data.imgURL" alt="Image"> {{data.shipmentName}}
                             </td>
                         </ng-container>
@@ -97,8 +72,9 @@
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
                     </table>
-                    <mat-paginator [pageSizeOptions]="[3, 10, 20]" showFirstLastButtons></mat-paginator>
+                    <mat-paginator class="mat-elevation-z8 center" [pageSizeOptions]="[3, 10, 20]" showFirstLastButtons></mat-paginator>
                     <!-- <mat-paginator -->
                 </div>
             </div>
