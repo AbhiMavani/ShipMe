@@ -6,7 +6,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource,MatCardModule} from '@angular/material';
 import { Router, ActivatedRoute} from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import * as $ from 'jquery';
+//import * as $ from 'jquery';
 import { Shipment } from 'src/app/Class/shipment';
 
 export interface PeriodicElement {
