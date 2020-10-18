@@ -1,6 +1,9 @@
  // built-in
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { AgmCoreModule } from '@agm/core';
+import { AgmDirectionModule } from 'agm-direction';
+import { GooglePlaceModule } from "ngx-google-places-autocomplete";
 import { FormsModule,ReactiveFormsModule  } from '@angular/forms';
 import { Routes, RouterModule} from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -66,6 +69,10 @@ import { RankingComponent } from './ranking/ranking.component';
 import { ViewFileComponent } from './ide/view-file/view-file.component';
 import { RegiUserComponent } from './authentication/registration/regi-user/regi-user.component';
 import { UploadComponent } from './upload/upload.component';
+import { DisplayShipmentComponent } from './transporter/ManageShipment/display-shipment/display-shipment.component';
+import { FindShipmentComponent } from './transporter/ManageShipment/find-shipment/find-shipment.component';
+import { MakeQuotationComponent } from './transporter/ManageShipment/make-quotation/make-quotation.component';
+import { ManageQuotationComponent } from './transporter/ManageShipment/manage-quotation/manage-quotation.component';
 
 
 
@@ -105,6 +112,12 @@ const routes: Routes = [
   { path: 'customer/shipment/create', component: CreateShipmentComponent , canActivate: [AuthGuard]},
   { path: 'customer/shipment/:id', component: ViewShipmentComponent , canActivate: [AuthGuard]},
 
+
+  //Transporter
+  { path: 'transporter/shipment/display/:id', component: DisplayShipmentComponent, canActivate: [AuthGuard] },
+  { path: 'transporter/shipment/find', component: FindShipmentComponent, canActivate: [AuthGuard] },
+  { path: 'transporter/shipment/quotation', component: MakeQuotationComponent, canActivate: [AuthGuard] },
+  { path: 'transporter/shipment/view-quotation', component: ManageQuotationComponent, canActivate: [AuthGuard] },
   // practice
   { path: 'practice', component: PracticeComponent },
   // Admin Problem
@@ -170,6 +183,10 @@ const routes: Routes = [
     ManageShipmentComponent,
     ViewShipmentComponent,
     UploadComponent,
+    DisplayShipmentComponent,
+    FindShipmentComponent,
+    MakeQuotationComponent,
+    ManageQuotationComponent,
 
 
   ],
@@ -191,6 +208,11 @@ const routes: Routes = [
     ToastrModule.forRoot(),
     MatPaginatorModule,
     MatFormFieldModule,
+    GooglePlaceModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCy3rHWu9zt5JmGs5fcCdu68mompol3aEs'
+    }),
+    AgmDirectionModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

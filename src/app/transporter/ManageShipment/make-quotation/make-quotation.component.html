@@ -1,0 +1,97 @@
+<div id="wrapper">
+    <app-header></app-header>
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        Add Shipments<small></small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li class="active">
+                            <i class="fa fa-dashboard"></i> &nbsp; Make Quotation
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-plus"></i> Add new
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input class="form-control" formControlName="amount" type='text' required>
+                            <!-- <small *ngIf="dataFormControl.shipmentName.touched && dataFormControl.shipmentName==''" class="text-danger">Shipment name is
+                        required</small> -->
+                        </div>
+
+                        <div class="form-group">
+                            <label>Services</label><br/>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                          <input (change)="addService($event)" [checked]="isPackaging" type="checkbox" class="form-check-input" name="packaging"> Packaging
+                        </label>
+                            </div>
+
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                          <input (change)="addService($event)" [checked]="isLoading" type="checkbox" class="form-check-input" name="loading"> Loading And Unloading
+                        </label>
+                            </div>
+
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                          <input (change)="addService($event)" [checked]="isPickup" type="checkbox" class="form-check-input" name="pickup"> PickUp
+                        </label>
+                            </div>
+
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                          <input id="isOtherChecked" type="checkbox" [checked]="isOther" [ngModelOptions]="{standalone: true}" name={{isChecked}} [(ngModel)]="isChecked"  class="form-check-input"> Other
+                        </label>
+                            </div>
+
+
+                            <!-- <div class="input-group" *ngIf="isChecked">
+                        <div *ngFor="let control of serviceControl.controls; index as i">
+                            <input id="email" type="text" class="form-control" name="email"  placeholder="Other Service">
+                            <span (click)="addService($event)"  class="input-group-addon btn"><i name="add" class="glyphicon glyphicon-plus"></i></span>
+                            <span class="input-group-addon btn"><i class="glyphicon glyphicon-minus"></i></span>
+  
+                        </div>
+  
+                      </div> -->
+
+                            <div class="form-group" *ngIf="(isChecked || isOther)">
+                                <label>Other Services</label>
+                                <input id="other" class="form-control other" [ngModelOptions]="{standalone: true}" [(ngModel)]="otherService" name={{otherService}} type='text' required>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>Comments</label>
+                                <input class="form-control" formControlName="comment" type='text' required>
+                                <!-- <small *ngIf="dataFormControl.shipmentName.touched && dataFormControl.shipmentName==''" class="text-danger">Shipment name is
+                          required</small> -->
+                            </div>
+
+                            <div class="col-xs-6 text-center">
+                                <button type="submit" class="btn btn-success" style="width: 100px">Submit</button>
+                            </div>
+
+
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

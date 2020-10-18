@@ -26,6 +26,7 @@ var Answer = require('./Data/Model/answer');
 var Solutions = require('./Data/Model/solution');
 var Ranking = require('./Data/Model/ranking');
 var Like = require('./Data/Model/likes');
+var Quotation = require('./Data/Model/quotation');
 var Test = require('./Data/Model/test');
 
 
@@ -741,7 +742,7 @@ app.post('/addshipment', upload.single('file'), function(req, res) {
     var img = fs.readFileSync(req.file.path);
     var encode_image = img.toString('base64');
     // Define a JSONobject for the image attributes for saving to database
-
+    console.log(req);
     var file1 = {
         contentType: req.file.mimetype,
         image: new Buffer(encode_image, 'base64')
@@ -755,7 +756,7 @@ app.post('/addshipment', upload.single('file'), function(req, res) {
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         fromCollection: req.body.fromCollection,
-        toDelivery: req.body.toDelivery
+        toDelivery: req.body.toDelivery,
     });
     obj.shipmentImage = file1;
 
@@ -805,7 +806,125 @@ app.get('/getShipmentById', function(req, res) {
             return res.send(error);
         }
     }).sort({ DateTime: -1 });
+});
+
+//shipment by code
+app.get('/shipments/:shipmentCode', function(req, res) {
+
+    Shipment.findOne({ shipmentCode: req.params.shipmentCode }, function(error, data) {
+        if (!error) {
+            return res.send(data);
+        }
+        console.log("Oh my God");
+        return res.send(error);
+    });
 })
+
+
+
+
+/* Transporter#########################################################*/
+
+app.get('/quotation/:shipmentCode', function(req, res) {
+
+    Quotation.find({ shipmentCode: req.params.shipmentCode }, function(error, data) {
+        if (!error) {
+            return res.send(data);
+        }
+        console.log("Oh my God");
+        return res.send(error);
+    });
+});
+
+
+
+app.post('/quotation', function(req, res) {
+    Quotation.countDocuments({ transporterId: req.body.transporterId, shipmentCode: req.body.shipmentCode }, function(err, count) {
+        if (count) {
+            return res.status(409).send(['Quotation alread exist']);
+        } else {
+
+            let data = new Quotation({
+                shipmentCode: req.body.shipmentCode,
+                transporterId: req.body.transporterId,
+                amount: req.body.amount,
+                services: req.body.services,
+                comment: req.body.comment,
+                status: req.body.status
+            });
+
+            console.log(data);
+
+            data.save(function(error, doc) {
+                // console.log(req.body.shipmentCode);
+                if (!error)
+                    res.status(200).send({ "message": "Quotation added successfully" + req.body.shipmentCode });
+                else {
+                    res.status(422).send(['adding quotation failed']);
+                }
+            });
+
+        }
+
+    });
+});
+
+
+app.put("/quotation", function(req, res) {
+    console.log("this is for edting ");
+    let data = {
+        shipmentCode: req.body.shipmentCode,
+        transporterId: req.body.transporterId,
+        amount: req.body.amount,
+        services: req.body.services,
+        comment: req.body.comment,
+        status: req.body.status
+    };
+
+    var query = { 'transporterId': req.body.transporterId, 'shipmentCode': req.body.shipmentCode };
+
+    // Quotation.findOne(query,data,function(err,doc){
+    //   if(err) {console.log(err);return res.status(500).send(['editing quotation failed']);}
+    //   else
+    // });
+
+    Quotation.updateOne(query, data, function(err, doc) {
+        if (err) { console.log(err); return res.status(500).send(['editing quotation failed']); }
+        return res.status(200).send({ "message": "Quotation edited successfully" + req.body.shipmentCode });
+    });
+
+});
+
+
+app.get('/quotationForEdit', function(req, res) {
+
+    // console.log(req.originalUrl);
+    Quotation.findOne({ transporterId: req.query.transporterId, shipmentCode: req.query.shipmentCode }, function(error, data) {
+        //console.log(contestData);
+        if (!error) {
+            return res.send(data);
+
+        } else {
+            console.log("oh my god");
+            return res.send(error);
+        }
+    });
+});
+
+app.get('/quotation', function(req, res) {
+    Quotation.find({}, function(error, data) {
+        //console.log(contestData);
+        if (!error) {
+            return res.send(data);
+        } else {
+            console.log("oh my god");
+            return res.send(error);
+        }
+    });
+});
+
+
+
 
 app.get('/problem', function(req, res) {
     testcase = '';

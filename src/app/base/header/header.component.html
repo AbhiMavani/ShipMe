@@ -79,7 +79,7 @@
                     <a [routerLink]="['/profile',userDetails.user_name]"><i class="fa fa-fw fa-user"></i> Profile</a>
                 </li>
                 <li>
-                    <a [routerLink]="['/edit-profile']"><i class="fa fa-fw fa-user"></i>Edit Profile</a>
+                    <a [routerLink]="['/edit-profile']"><i class="fa fa-fw fa-edit"></i>Edit Profile</a>
                 </li>
                 <li>
                     <a [routerLink]="['/my-question']"><i class="fa fa-question-circle"> &nbsp;</i>My Questions</a>
@@ -94,7 +94,7 @@
             </ul>
         </li>
         <li class="dropdown" *ngIf="notLogin">
-            <a [routerLink]="['/login']"><i class="fa fa-sign-in"></i> Login</a>
+            <a [routerLink]="['/login']"><i class="fa fa-fw fa-sign-in"></i> Login</a>
         </li>
         <li class="dropdown" *ngIf="notLogin">
             <a [routerLink]="['/registration']"><i class="glyphicon glyphicon-user"></i>Sign Up </a>
@@ -108,26 +108,40 @@
     <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
 
     <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <div *ngIf="user">
+        <div *ngIf="user || userTransporter">
 
 
             <ul class="nav navbar-nav side-nav">
-
-                <li class="active contests contest">
+                <li class="shipment">
+                    <a [routerLink]="['/']"><i class="fa fa-fw fa-home"></i> Home</a>
+                </li>
+                <li class="shipment" *ngIf="notLogin || user">
+                    <a [routerLink]="['/customer/shipment/create']"><i class="fa fa-fw fa-truck"></i> Get Quotes</a>
+                </li>
+                <li class="shipment" *ngIf="login && user">
+                    <a [routerLink]="['/customer/shipment']"><i class="fa fa-fw fa-edit"></i> Manage Shipments</a>
+                </li>
+                <li class="shipment" *ngIf="notLogin || userTransporter">
+                    <a [routerLink]="['/transporter/shipment/find']"><i class="fa fa-fw fa-search"></i> Search Deliveries</a>
+                </li>
+                <li class="shipment" *ngIf="notLogin || userTransporter">
+                    <a [routerLink]="['/transporter/shipment/view-quotation']"><i class="fa fa-fw fa-truck"></i>Manage Quotations</a>
+                </li>
+                <!-- <li class="active contests contest">
                     <a [routerLink]="['/contests']"><i class="fa fa-fw fa-dashboard"></i> Contests</a>
                 </li>
 
                 <li class="practice">
                     <a [routerLink]="['/practice']"><i class="fa fa-fw fa-table"></i> Practice</a>
-                </li>
+                </li> -->
                 <li class="discuss">
-                    <a [routerLink]="['/discuss']"><i class="fa fa-fw fa-comments"></i> Discuss </a>
+                    <a [routerLink]="['/discuss']"><i class="fa fa-fw fa-comments"></i> Helps </a>
                 </li>
-                <li class="ide">
+                <!-- <li class="ide">
                     <a [routerLink]="['/ide']"><i class="fa fa-fw fa-file-code-o"></i> IDE </a>
-                </li>
+                </li> -->
                 <li class="shipment">
-                    <a [routerLink]="['/customer/shipment']"><i class="fa fa-fw fa-truck"></i> Manage Shipments</a>
+                    <a [routerLink]="['/']"><i class="fa fa-fw fa-question-circle"></i> How it Works</a>
                 </li>
             </ul>
         </div>

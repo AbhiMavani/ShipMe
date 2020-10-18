@@ -1,7 +1,7 @@
 <div id="wrapper">
     <app-header></app-header>
     <div id="page-wrapper">
-        <div class="container-fluid">
+        <div class="container-fluid" *ngIf="data">
 
             <div class="row">
                 <div class="col-lg-12">
@@ -18,6 +18,96 @@
                     </ol>
                 </div>
             </div>
+            <h1>{{data.shipmentName}}</h1>
+
+            <div class="active-deliveries-panel-wrapper">
+                <div class="container">
+                    <div id="ActiveListings" class="panel panel-default ">
+                        <div class="panel-heading">
+                            <i class="fa fa-truck panel-heading-i" style="color:blue; margin-right:5px"></i>
+                            <strong>Active Quote Requests</strong>
+                        </div>
+                        <!--[if IE 8]><ul class="list-group ie"> <![endif]-->
+                        <!--[if IE 9]><ul class="list-group ie"> <![endif]-->
+                        <!--[if !IE]><!-->
+                        <ul class="list-group">
+                            <!--<![endif]-->
+                            <li class="list-group-item">
+                                <div class="row va">
+                                    <div class="col-md-2 col-sm-3 col-xs-12 va">
+                                        <a href="" class="thumbnail">
+                                            <img class="upload-thumbnail" [src]="data.imgURL" />
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 col-sm-5 col-xs-12 va">
+                                        <ul class="info-section list-unstyled">
+                                            <li class="heading" style="margin-bottom:8px;">
+                                                <a href="/listings/bids/PVBXPDWOA">{{data.shipmentName}}</a>
+                                            </li>
+                                            <li class="info-address" style="margin-bottom:8px;">
+                                                <i class="fa fa-map-marker from" style="color: green; font-size:20px;"></i>
+                                                <span> {{data.fromCollection}}</span>
+                                            </li>
+                                            <li class="info-address" style="margin-bottom:8px;">
+                                                <i class="fa fa-map-marker to" style="color:red; font-size:20px;"></i>
+                                                <span> {{data.toDelivery}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="clearfix visible-xs"></div>
+                                    <div class="col-md-4 col-sm-4 col-sm-offset-0 col-xs-12 va text-center ta">
+                                        <div id="" class="section-timer">
+                                            <i class="fa fa-clock-o"></i><br>
+                                            <span>Quotes should be with you inside</span><br>
+                                            <p id="" class="time">14 mins</p>
+                                        </div>
+                                        <div id="" class="section-timer-expiry hidden">
+                                            You have not received any quotes.<br />Don't worry, we will email them to you as soon as they arrive. </div>
+                                        <div id="" class="section-timer-expiry hidden">
+                                            <a href="" class="btn btn-success btn-view-quote">View Quotes</a>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix visible-sm visible-xs"></div>
+                                    <div class="col-md-2 col-sm-12">
+                                        <ul class="nav nav-pills nav-stacked  ">
+                                            <li>
+                                                <a href="">
+                                                    <div>
+                                                        <i class="fa fa-arrow-circle-o-up"></i>
+                                                        <span>Upgrade</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="">
+                                                <a href="">
+                                                    <div>
+                                                        <i class="fa fa-pencil-square-o"></i>
+                                                        <span>Edit</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="delete-li">
+                                                <a id="" class="listing-delete-anchor" data-delete-timeframe-notice="1" data-instant-listing="0" href="/listings/delete/PVBXPDWOA/1">
+                                                    <div>
+                                                        <i class="fa fa-trash-o"></i>
+                                                        <span>Delete</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="btn btn-success" (click)="pay(150)">Pay 150 $</div> -->
+            <agm-map [latitude]="lat" [longitude]="lng">
+                <agm-marker [latitude]="lat" [longitude]="lng">
+                </agm-marker>
+                <agm-direction [origin]="origin" [destination]="destination" [provideRouteAlternatives]="true">
+                </agm-direction>
+            </agm-map>
         </div>
     </div>
-</div>

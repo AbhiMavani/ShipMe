@@ -1,0 +1,91 @@
+<div id="wrapper">
+    <app-header></app-header>
+    <div id="page-wrapper">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        View Problems<small></small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li class="active">
+                            <i class="fa fa-dashboard"></i> &nbsp; Shipments
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-eye"></i> View Shipment
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="row col-md-12">
+                <div class="card mb-3 bg-light mycard" style="" *ngIf="data">
+                    <div class="row no-gutters">
+                        <div class="col-md-3">
+                            <img [src]="data.imgURL" class="card-img-top">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <div class="card-title h1">{{data.shipmentName | uppercase}}</div>
+                                <div class="card-text"><strong>Customer : &nbsp;</strong><a href="#">{{data.user_name | uppercase}}</a></div>
+
+                                <div class="card-text">
+                                    <span><strong>Origin :</strong> &emsp; {{data.fromCollection | titlecase}}</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span><strong>Destination : </strong>{{data.toDelivery | titlecase}}</span>
+                                </div>
+
+                                <div class="card-text"><strong>Start Date : &nbsp;</strong>{{data.startDate }}</div>
+                                <div class="card-text"><strong>End Date : &nbsp;</strong>{{data.endDate }}</div>
+
+                                <div class="mybtn card-text">
+                                    <div class="btn btn-primary" (click)="onShipmentSelect()">Make Quotations</div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row col-md-12">
+                <table mat-table [dataSource]="quotations" class="mat-elevation-z8 center">
+
+                    <!--- Note that these columns can be defined in any order.
+  The actual rendered columns are set as a property on the row definition" -->
+
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="transporter">
+                        <th mat-header-cell *matHeaderCellDef> Transporter </th>
+                        <td mat-cell *matCellDef="let data" class="shipment" (click)="onShipmentSelect(data)">
+                            {{data.transporterId}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="services">
+                        <th mat-header-cell *matHeaderCellDef> Services </th>
+                        <td mat-cell *matCellDef="let data"> {{data.stringServices}} </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef> Amount </th>
+                        <td mat-cell *matCellDef="let data"> {{data.amount}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="view">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <!-- <td mat-cell *matCellDef="let data"> <button class="btn btn-success">View</button> </td> -->
+                        <td mat-cell *matCellDef="let data"> </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

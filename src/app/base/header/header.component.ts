@@ -10,14 +10,15 @@ import * as $ from 'jquery';
     styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-    user;
-    userTransporter;
+    user=true;
+    userTransporter=true;
     admin;
     login;
     notLogin;
     first_name = '';
     last_name = '';
     userDetails = '';
+    userPayload;
     constructor(private userService: UserService, private router: Router) { }
 
 
@@ -49,12 +50,23 @@ export class HeaderComponent implements OnInit {
                     this.last_name = this.userDetails['last_name'];
                 }
             );
-        } else if (this.userService.isLoggedIn()) {
-            this.login = true;
-            this.notLogin = false;
-            this.user = true;
-            this.admin = false;
-            this.userTransporter = false;
+        } else if (this.userPayload = this.userService.isLoggedIn()) {
+            console.log("Abhishek,, " + this.userPayload.userType);
+            if(this.userPayload.userType === 'Customer'){
+            console.log("Ama avyu....");
+                this.login = true;
+                this.notLogin = false;
+                this.user = true;
+                this.admin = false;
+                this.userTransporter = false;
+            } else if(this.userPayload.userType === 'Transporter'){
+                console.log(" trans Ama avyu....");
+                    this.login = true;
+                    this.notLogin = false;
+                    this.user = false;
+                    this.admin = false;
+                    this.userTransporter = true;
+            }
             this.userService.getUserProfile().subscribe(
                 res => {
                     this.userDetails = res['user'];
@@ -63,6 +75,7 @@ export class HeaderComponent implements OnInit {
                 }
             );
         } else if (this.userService.isTransporterLoggedIn()) {
+            console.log("Transpor ma avyu");
             this.login = true;
             this.notLogin = false;
             this.userTransporter = true;
@@ -76,12 +89,14 @@ export class HeaderComponent implements OnInit {
                 }
             );
         } else {
+            console.log("Else ma avyu...");
             this.login = false;
             this.notLogin = true;
             this.user = true;
             this.userTransporter = true;
             this.admin = false;
         }
+        console.log("Custmor : " + this.user + ",Transport: " + this.userTransporter + "Admin: " + this.admin);
     }
 
     // for logout button in name part of header

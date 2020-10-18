@@ -91,9 +91,11 @@ export class UserService {
 
   isLoggedIn() {
       const userPayload = this.getUserPayload();
+      console.log(userPayload);
+      console.log("Customer shit..");
       if (userPayload) {
         if (userPayload.exp > Date.now() / 1000) {
-          return true;
+          return userPayload;
         } else {
           this.deleteToken();
           return false;
@@ -112,9 +114,11 @@ export class UserService {
     }
     isTransporterLoggedIn() {
       const userPayload = this.getUserPayload();
+      console.log("Transpoer shit..");
+      console.log(userPayload);
       if (userPayload) {
-        if (userPayload.userType === 'Transporter') {
-          return userPayload.exp > Date.now() / 1000;
+        if (userPayload.userType === 'Transporter' && (userPayload.exp > Date.now() / 1000)) {
+          return true;
         }
         return false;
       }

@@ -33,17 +33,17 @@ var userSchema = new mongoose.Schema({
     },
     role: {
         type: String
-    }, 
+    },
     city: {
         type: String
     },
     state: {
         type: String
-    }, 
+    },
     password: {
         type: String,
         required: 'Password can\'t be empty',
-        minlength:[6,'Password must be atleast 6 character long']
+        minlength: [6, 'Password must be atleast 6 character long']
     },
     userType: {
         type: String,
@@ -61,21 +61,21 @@ var userSchema = new mongoose.Schema({
         type: String,
     },
 
-}) ;
+});
 
 //Custom validation for email
 userSchema.path('email_id').validate((val) => {
     emailRegex = /^[a-zA-Z]+[a-zA-Z0-9._]+@[a-zA-Z]+\.[a-zA-Z.]{2,5}$/;
     return emailRegex.test(val);
-}, 'Invalid emailID.' );
+}, 'Invalid emailID.');
 
 
-userSchema.methods.verifyPassword = function (password) {
+userSchema.methods.verifyPassword = function(password) {
     return password == this.password;
 };
 
-userSchema.methods.generateJwt = function () {
-    return jwt.sign({_id: this._id,role: this.role,user_name: this.user_name},"SECRET#123",{ expiresIn: "60m" });
+userSchema.methods.generateJwt = function() {
+    return jwt.sign({ _id: this._id, role: this.role, user_name: this.user_name, userType: this.userType }, "SECRET#123", { expiresIn: "60m" });
 }
 
-module.exports = mongoose.model('User',userSchema);
+module.exports = mongoose.model('User', userSchema);
