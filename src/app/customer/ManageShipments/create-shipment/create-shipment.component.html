@@ -48,7 +48,7 @@
                             <label>Pick Up Address</label>
                             <div class=" input-group">
                                 <span class="input-group-addon"> <i class="fa fa-map-marker" style="color: green; font-size: 20px;"></i></span>
-                                <input class="form-control" type='text' name="fCollection" formControlName="fromCollection" placeholder="Collection Postcode or Town" required>
+                                <input class="form-control" type='text' name="fCollection" formControlName="fromCollection" ngx-google-places-autocomplete (onAddressChange)="AddressChange($event)" placeholder="Search Nearest Location" required>
                             </div>
                             <!-- <small class="text-danger" *ngIf="dataFormControl.fromCollection.touched || dataFormControl.fromCollection.invalid">Pick Up Address is
                                 required</small> -->
@@ -58,7 +58,7 @@
                             <label>Shiping Address</label>
                             <div class=" input-group">
                                 <span class="input-group-addon"> <i class="fa fa-map-marker" style="color:red; font-size: 20px;"></i></span>
-                                <input class="form-control" type='text' name="tDelivery" formControlName="toDelivery" placeholder="Delivery Postcode or Town" required>
+                                <input class="form-control" type='text' name="tDelivery" formControlName="toDelivery" ngx-google-places-autocomplete (onAddressChange)="AddressChange1($event)" placeholder="Delivery Postcode or Town" required>
 
                             </div>
                             <!-- <small class="text-danger" *ngIf="dataFormControl.toDelivery.touched || dataFormControl.toDelivery.invalid">Delivery Address is

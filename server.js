@@ -26,12 +26,14 @@ var Answer = require('./Data/Model/answer');
 var Solutions = require('./Data/Model/solution');
 var Ranking = require('./Data/Model/ranking');
 var Like = require('./Data/Model/likes');
+var Quotation = require('./Data/Model/quotation');
 var Test = require('./Data/Model/test');
+var LivePath = require('./Data/Model/livepath');
 
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/codeworld', { useNewUrlParser: true }).then(
+mongoose.connect('mongodb+srv://kevin:12ka442ka1@cluster0.kpolw.mongodb.net/codeworld?retryWrites=true&w=majority', { useNewUrlParser: true }).then(
     () => { console.log('Database is connected') },
     err => { console.log('Can not connect to the database') }
 );
@@ -92,7 +94,7 @@ passport.use(new localStrategy({ usernameField: 'user_name' },
                 // Unknown user
                 else if (!user)
                     return done(null, false, { message: 'username is not registered' });
-                // Wrong password 
+                // Wrong password
                 else if (!user.verifyPassword(password))
                     return done(null, false, { message: 'Wrong password.' })
                         // Authentication succeeded
@@ -741,7 +743,7 @@ app.post('/addshipment', upload.single('file'), function(req, res) {
     var img = fs.readFileSync(req.file.path);
     var encode_image = img.toString('base64');
     // Define a JSONobject for the image attributes for saving to database
-
+    console.log(req);
     var file1 = {
         contentType: req.file.mimetype,
         image: new Buffer(encode_image, 'base64')
@@ -755,7 +757,7 @@ app.post('/addshipment', upload.single('file'), function(req, res) {
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         fromCollection: req.body.fromCollection,
-        toDelivery: req.body.toDelivery
+        toDelivery: req.body.toDelivery,
     });
     obj.shipmentImage = file1;
 
@@ -805,7 +807,262 @@ app.get('/getShipmentById', function(req, res) {
             return res.send(error);
         }
     }).sort({ DateTime: -1 });
+});
+
+//shipment by code
+app.get('/shipments/:shipmentCode', function(req, res) {
+
+    Shipment.findOne({ shipmentCode: req.params.shipmentCode }, function(error, data) {
+        if (!error) {
+            return res.send(data);
+        }
+        console.log("Oh my God");
+        return res.send(error);
+    });
 })
+
+
+
+
+/* Transporter#########################################################*/
+
+app.get('/quotation/:shipmentCode', function(req, res) {
+
+    Quotation.find({ shipmentCode: req.params.shipmentCode }, function(error, data) {
+        if (!error) {
+            return res.send(data);
+        }
+        console.log("Oh my God");
+        return res.send(error);
+    });
+});
+
+app.get('/transporterQuotation/:transporterId', function(req, res) {
+
+  Quotation.find({ transporterId: req.params.transporterId }, function(error, data) {
+      if (!error) {
+          return res.send(data);
+      }
+      console.log("Oh my God");
+      return res.send(error);
+  });
+});
+
+
+app.post('/quotation', function(req, res) {
+    Quotation.countDocuments({ transporterId: req.body.transporterId, shipmentCode: req.body.shipmentCode }, function(err, count) {
+        if (count) {
+            return res.status(409).send(['Quotation alread exist']);
+        } else {
+
+            let data = new Quotation({
+                shipmentCode: req.body.shipmentCode,
+                transporterId: req.body.transporterId,
+                amount: req.body.amount,
+                services: req.body.services,
+                comment: req.body.comment,
+                status: req.body.status
+            });
+
+            console.log(data);
+
+            data.save(function(error, doc) {
+                // console.log(req.body.shipmentCode);
+                if (!error)
+                    res.status(200).send({ "message": "Quotation added successfully" + req.body.shipmentCode });
+                else {
+                    res.status(422).send(['adding quotation failed']);
+                }
+            });
+
+        }
+
+    });
+});
+
+app.delete('/deleteQuotation', function(req, res) {
+
+  Quotation.deleteOne({ transporterId: req.query.transporterId, shipmentCode: req.query.shipmentCode }, function(error, upque) {
+    if (error) {
+        console.log("Error in deleting the quotation : "+ error);
+        res.status(422).send(['Something went wrong.']);
+    }
+    return res.status(200).send({ "message": "Deleted" });
+  });
+
+});
+
+app.put('/acceptQuotation', function(req, res) {
+  Quotation.countDocuments({ shipmentCode: req.body.shipmentCode, status : "accepted" }, function(err, count) {
+    if(count>0){
+      return res.status(409).send(['You have already accepted the quotation']);
+    }
+
+    let data = {
+      status: "accepted"
+    };
+
+    var query = { 'transporterId': req.body.transporterId, 'shipmentCode': req.body.shipmentCode };
+
+    Quotation.updateOne(query, data, function(err, doc) {
+        if (err) { console.log(err); return res.status(500).send(['Quotation Accepting failed']); }
+        return res.status(200).send({ "message": "Quotation Accepted" });
+    });
+
+  });
+
+});
+
+// app.put("/acceptQuotation", function(req, res) {
+//   console.log("*");
+//   console.log(req.params.transporterId);
+//   console.log(req.params);
+//   return res.status(200).send({"message": "Accepted Successfully"});
+
+// });
+
+
+app.put("/quotation", function(req, res) {
+    console.log("this is for edting ");
+    let data = {
+        shipmentCode: req.body.shipmentCode,
+        transporterId: req.body.transporterId,
+        amount: req.body.amount,
+        services: req.body.services,
+        comment: req.body.comment,
+        status: req.body.status
+    };
+
+    var query = { 'transporterId': req.body.transporterId, 'shipmentCode': req.body.shipmentCode };
+
+    // Quotation.findOne(query,data,function(err,doc){
+    //   if(err) {console.log(err);return res.status(500).send(['editing quotation failed']);}
+    //   else
+    // });
+
+    Quotation.updateOne(query, data, function(err, doc) {
+        if (err) { console.log(err); return res.status(500).send(['editing quotation failed']); }
+        return res.status(200).send({ "message": "Quotation edited successfully" + req.body.shipmentCode });
+    });
+
+});
+
+
+
+
+app.get('/quotationForEdit', function(req, res) {
+
+    // console.log(req.originalUrl);
+    Quotation.findOne({ transporterId: req.query.transporterId, shipmentCode: req.query.shipmentCode }, function(error, data) {
+        //console.log(contestData);
+        if (!error) {
+            return res.send(data);
+
+        } else {
+            console.log("oh my god");
+            return res.send(error);
+        }
+    });
+});
+
+
+
+app.get('/quotation', function(req, res) {
+    Quotation.find({}, function(error, data) {
+        //console.log(contestData);
+        if (!error) {
+            return res.send(data);
+        } else {
+            console.log("oh my god");
+            return res.send(error);
+        }
+    });
+});
+
+app.post('/sendNotification', function(req, res) {
+
+  User.findOne({ user_name: req.body.transporterId },
+      (err, user) => {
+          if (!user)
+              return res.status(404).json({ status: false, message: 'User record not found.' });
+          else {
+              var transporter = nodemailer.createTransport({
+                  service: 'gmail',
+                  auth: {
+                      user: 'ShipMeSDP@gmail.com',
+                      pass: 'ShipMe@123'
+                  }
+              });
+              var link = 'http://localhost:4200/transporter/shipment/view-quotation';
+              var mailOptions = {
+                  from: 'ShipMeSDP@gmail.com',
+                  to: 'greatthor0572@gmail.com',
+                  subject: 'Your quotation is accepted ' + req.body.transporterId,
+                  html: '<p>Hello ' + req.body.transporterId + ',</p><br><p>Your quotation for shipment  <b>'+req.body.shipmentCode+'</b> have been accepted. You can view it on manage <a href="'+link+'"> shipment panel </a> of the Shipme Dashboard.</p><br><p>Thankyou for using Shipment</p><p>-Admin</p>'
+              };
+
+              console.log("*");
+
+              transporter.sendMail(mailOptions, function(error, info) {});
+              return res.status(200).send({});
+          }
+      }
+  );
+
+});
+
+app.get('/location', function(req, res) {
+
+  var filter = {
+    user_name : req.query.transporterId,
+    shipmentCode : req.query.shipmentCode
+  }
+  console.log(req.query.transporterId);
+  console.log(req.query.shipmentCode);
+  LivePath.findOne(filter, function(error, data) {
+      //console.log(contestData);
+      if (!error) {
+          console.log(data);
+          return res.send(data);
+      } else {
+          console.log("oh my god");
+          return res.send(error);
+      }
+  });
+});
+
+
+app.post('/location', function(req, res) {
+
+  var filter = {
+    user_name : req.body.transporterId,
+    shipmentCode : req.body.shipmentCode
+  }
+
+  console.log(req.body.transporterId);
+  console.log(req.body.shipmentCode);
+
+  var update = {
+    lat : req.body.lat,
+    lng : req.body.lng
+  }
+
+  LivePath.findOneAndUpdate(filter, update,  {new: true,upsert: true}, function(error,doc){
+    if(error){
+      res.status(422).send([error]);
+    }
+    else{
+      res.status(200).send({ "message": "Location Updated Successfull" });
+    }
+  });
+
+
+
+});
+
+
+
+
 
 app.get('/problem', function(req, res) {
     testcase = '';

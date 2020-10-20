@@ -19,7 +19,7 @@ let Shipment = new Schema({
     shipmentImage: {
         image: Buffer,
         contentType: String
-    }
+    },
 });
 
 

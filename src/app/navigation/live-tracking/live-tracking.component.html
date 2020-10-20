@@ -1,0 +1,38 @@
+<div id="wrapper">
+  <app-header></app-header>
+  <div id="page-wrapper">
+    <div class="container-fluid">
+
+      <div class="row">
+          <div class="col-lg-12">
+              <h1 class="page-header">
+                  View Problems<small></small>
+              </h1>
+              <ol class="breadcrumb">
+                  <li class="active">
+                      <i class="fa fa-dashboard"></i> &nbsp; Shipments
+                  </li>
+                  <li class="active">
+                      <i class="fa fa-eye"></i> View Shipment
+                  </li>
+              </ol>
+          </div>
+      </div>
+
+      <div class="row">
+        <button (click)="updateLocation()" style="margin-bottom: 20px;"  class="btn btn-success">Update</button>
+      </div>
+
+      <div class="row">
+        <agm-map [latitude]="lat" [longitude]="lng">
+          <agm-marker [latitude]="lat" [longitude]="lng">
+          </agm-marker>
+          <agm-direction [origin]="origin" [destination]="destination" [provideRouteAlternatives]="true">
+          </agm-direction>
+        </agm-map>
+      </div>
+
+    </div>
+
+  </div>
+</div>

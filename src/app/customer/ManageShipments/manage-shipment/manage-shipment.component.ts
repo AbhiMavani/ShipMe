@@ -48,7 +48,7 @@ export class ManageShipmentComponent implements OnInit {
           binary += String.fromCharCode(bytes[i]);
       }
       return window.btoa(binary);
-  }
+    }
     ngOnInit() {
       if (this._userService.isLoggedIn()){
         this.userId = this._userService.getUserPayload().user_name;

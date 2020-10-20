@@ -1,11 +1,14 @@
 import { Component, OnInit,HostListener,Directive  } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MapsAPILoader} from '@agm/core';
 import { FormGroup, FormControl,Validators,AbstractControl  } from '@angular/forms';
+import { GooglePlaceModule } from "ngx-google-places-autocomplete"; 
 import { DataService } from '../../../services/data.service';
 import { UserService } from '../../../services/user.service';
 import * as $ from 'jquery';
 import { formatDate } from '@angular/common';
+import { Location } from '../view-shipment/Location';
 
 export interface Tile {
   id: number,
@@ -23,6 +26,10 @@ export interface Tile {
 export class CreateShipmentComponent implements OnInit {
 
   sCode:String;
+  formattedaddress=" ";
+  formattedaddress1=" ";
+  public ori: Location;
+  private geoCoder; 
   dataForm = new FormGroup({
     shipmentCode:  new FormControl(' '),
     shipmentName: new FormControl(' '),
@@ -59,7 +66,7 @@ export class CreateShipmentComponent implements OnInit {
 
 
     constructor(private _dataService: DataService, private toastr: ToastrService,
-      private route: ActivatedRoute, private router: Router,private _userService:UserService) {
+      private route: ActivatedRoute, private router: Router,private _userService:UserService,private mapsAPILoader: MapsAPILoader) {
   
     }
 
@@ -99,7 +106,7 @@ export class CreateShipmentComponent implements OnInit {
   onSubmit() {
     this.sCode = (this.userId.trim().concat(this.dataForm.get('shipmentName').value.trim().slice(0,5).toString())).toUpperCase();
     this.dataForm.get('shipmentCode').setValue(this.sCode);
-    const formData = new FormData();
+    const formData = new FormData();  
     if (this.defFile === '') {
       if (this.defFile === '') {
         this.toastr.error('Please upload Shipment Image');
@@ -115,7 +122,8 @@ export class CreateShipmentComponent implements OnInit {
         formData.append('toDelivery',this.dataForm.get('toDelivery').value);
         formData.append('startDate',this.dataForm.get('startDate').value);
         formData.append('endDate',this.dataForm.get('endDate').value);
-      };    
+      };
+      
       this._dataService.postShipment(formData).subscribe(
         status => {
           this.toastr.success('Shipment Added successfuly');
@@ -131,6 +139,19 @@ export class CreateShipmentComponent implements OnInit {
         const file = event.target.files[0];
         this.dataForm.get('shipmentImage').setValue(file);
       }
+    }
+
+    public AddressChange(address: any) { 
+      //setting address from API to local variable 
+      this.formattedaddress=address.formatted_address;
+      this.dataForm.get('fromCollection').setValue(this.formattedaddress);
+      console.log(this.dataForm.get('fromCollection').value);
+    }
+    public AddressChange1(address: any) { 
+      //setting address from API to local variable 
+      this.formattedaddress1=address.formatted_address;
+      this.dataForm.get('toDelivery').setValue(this.formattedaddress1);
+      console.log(this.dataForm.get('toDelivery').value);
     }
   }
 
