@@ -125,11 +125,6 @@ export class LiveTrackingComponent implements OnInit {
         }
       );
     }
-
-
-
-
-
   }
 
 }
