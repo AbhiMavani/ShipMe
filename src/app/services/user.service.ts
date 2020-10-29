@@ -125,5 +125,13 @@ export class UserService {
     }
 
 
+  sendNotification(data) {
+    return this.http.post(environment.apiEndPoint + '/sendNotification' , data);
   }
+
+}
+
+
+
+
 

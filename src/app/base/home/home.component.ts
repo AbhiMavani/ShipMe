@@ -7,7 +7,11 @@ import * as $ from 'jquery';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  cus = 5321;
+ 
+  public countCustomer;
+  public countTransporter;
+  public countListing;
+
   constructor() { }
 
   ngOnInit() {

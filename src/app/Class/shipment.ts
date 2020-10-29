@@ -8,6 +8,7 @@ export class Shipment {
     startDate: String;
     endDate: String;
     shipmentImage: String;
+    shipmentStatus: String;
 }
 
 export class Quotation{

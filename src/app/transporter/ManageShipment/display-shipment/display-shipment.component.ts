@@ -5,8 +5,12 @@ import { DataService } from 'src/app/services/data.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { MapsAPILoader } from '@agm/core';
 
-
+export interface Location {
+  lat: number;
+  lng: number;
+}
 
 @Component({
   selector: 'app-display-shipment',
@@ -22,6 +26,18 @@ export class DisplayShipmentComponent implements OnInit {
   private message;
   user_photo: SafeResourceUrl;
 
+  lat: number;
+  lng: number;
+  zoom:number;
+  address: string;
+  private geoCoder;
+  tmp:any;
+  tmp1:any;
+
+  public ori : Location;
+  public origin: any;
+  public destination: any;
+
 
   displayedColumns: string[] = ['transporter', 'services', 'amount', 'view'];
   quotations: MatTableDataSource<Quotation>;
@@ -29,7 +45,7 @@ export class DisplayShipmentComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   constructor(private _dataService: DataService,
      private router: Router,private route: ActivatedRoute,private sanitizer: DomSanitizer,
-    private _userService: UserService) {
+    private _userService: UserService,private mapsAPILoader: MapsAPILoader) {
 
         this.code = this.route.snapshot.paramMap.get('id');
   }
@@ -79,9 +95,43 @@ export class DisplayShipmentComponent implements OnInit {
 
 
         console.log(this.data);
+        this.after1();
       },
       err => {}
     );
+  }
+
+  after1() {
+    // this.origin = this.data.fromCollection;
+    // this.destination = this.data.toDelivery;
+    this.mapsAPILoader.load().then(() => {
+      this.geoCoder = new google.maps.Geocoder;
+      console.log("here ....com " + this.data.fromCollection);
+      var tmp = this.data.fromCollection;
+      this._dataService.geocodeAddress(tmp).subscribe((ori:Location) => {
+        console.log("Origin.. " + ori.lng);
+        this.origin = {lat : ori.lat, lng: ori.lng};
+      });
+      var tmp1 = this.data.toDelivery;
+      this._dataService.geocodeAddress(tmp1).subscribe((des:Location) => {
+        console.log("Destination " + des.lat);
+        this.destination = {lat : des.lat, lng: des.lng};
+      });
+    //  this.setCurrentLocation();
+    });
+    console.log(this.data.shipmentName);
+  }
+
+  private setCurrentLocation() {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log("This is.. " + position.coords.latitude + " "+ position.coords.longitude + " " + position.coords.accuracy);
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+        this.zoom = 15;
+      },err => {alert('Please enable your GPS position feature.');},
+      {maximumAge:0, timeout:5000, enableHighAccuracy: true});
+    }
   }
 
 

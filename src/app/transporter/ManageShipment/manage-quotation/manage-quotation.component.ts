@@ -6,14 +6,14 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { Shipment,Quotation } from 'src/app/Class/shipment';
+import { MapsAPILoader } from '@agm/core';
+// import { error } from 'console';
 
 @Component({
   selector: 'app-manage-quotation',
   templateUrl: './manage-quotation.component.html',
   styleUrls: ['./manage-quotation.component.css']
 })
-
-
 
 export class ManageQuotationComponent implements OnInit {
 
@@ -28,7 +28,7 @@ export class ManageQuotationComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   constructor(private _dataService: DataService, private toastr: ToastrService,
     private route: ActivatedRoute, private router: Router,private sanitizer: DomSanitizer,
-    private _userService: UserService)
+    private _userService: UserService,private mapsAPILoader: MapsAPILoader)
     {
       this.filterSelector = "shipmentName";
     }
@@ -49,12 +49,11 @@ export class ManageQuotationComponent implements OnInit {
         this.isNotLogin = false;
       }
 
-      this._dataService.getQuotation().subscribe(
+      this._dataService.getQuotationByUser(this.userId).subscribe(
 
         quotation => {
-
           quotation.forEach(element => {
-
+          
               this._dataService.getShipment(element.shipmentCode).subscribe(
                 shipment => {
                     this.user_photo =  this.sanitizer.bypassSecurityTrustResourceUrl('data:' + shipment.shipmentImage.contentType + ';base64,' + this.arrayBufferToBase64(shipment.shipmentImage.image.data));
@@ -70,7 +69,9 @@ export class ManageQuotationComponent implements OnInit {
           });
 
 
+
           this.dataSource = new MatTableDataSource<Quotation>(quotation);
+
           this.dataSource.paginator = this.paginator;
           this.dataSource.filterPredicate = (data: Quotation, filtersJson: string) => {
             const matchFilter = [];
@@ -106,6 +107,18 @@ export class ManageQuotationComponent implements OnInit {
     }
   }
 
+  private setCurrentLocation() {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log("This is.. " + position.coords.latitude + " "+ position.coords.longitude + " " + position.coords.accuracy);
+        // this.lat = position.coords.latitude;
+        // this.lng = position.coords.longitude;
+        // this.zoom = 15;
+      },err => {alert('Please enable your GPS position feature.');},
+      {maximumAge:0, timeout:5000, enableHighAccuracy: true});
+    }
+  }
+
   onShipmentSelect(data) {
     console.log("Event Creted");
     this.router.navigate(['/customer/shipment', data.shipmentCode]);
@@ -114,4 +127,31 @@ export class ManageQuotationComponent implements OnInit {
   editQuotation(data){
     this.router.navigate(['/transporter/shipment/quotation'],{queryParams: {shipmentCode: data.shipmentCode , transporterCode: this.userId , edit: "True"}});
   }
+
+  deleteQuotation(data){
+    this._dataService.deleteQuotation({shipmentCode: data.shipmentCode, transporterId: data.transporterId}).subscribe(
+      status => {
+        this.toastr.success('Quotation Deleted successfuly');
+      },
+      error => {
+        this.toastr.error("Error while deleting");
+      }
+    );
+    window.location.reload();
+  }
+
+  startLiveLocation(data){
+    this.setCurrentLocation();
+
+    this.router.navigate(['/livetracking'],{queryParams: {shipmentCode: data.shipmentCode , transporterId: this.userId }});
+
+  }
+
+  finishQuotation(data){
+    console.log("******************************");
+    
+    this._dataService.finishQuotation(data).subscribe();
+    window.location.reload();
+  }
+
 }

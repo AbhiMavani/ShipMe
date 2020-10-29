@@ -25,7 +25,7 @@
                         <div class="col-md-3">
                             <img [src]="data.imgURL" class="card-img-top">
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-5">
                             <div class="card-body">
                                 <div class="card-title h1">{{data.shipmentName | uppercase}}</div>
                                 <div class="card-text"><strong>Customer : &nbsp;</strong><a href="#">{{data.user_name | uppercase}}</a></div>
@@ -44,10 +44,19 @@
 
                             </div>
                         </div>
+
+                        <div class="col-md-4">
+                            <agm-map [latitude]="lat" [longitude]="lng">
+                                <agm-marker [latitude]="lat" [longitude]="lng">
+                                </agm-marker>
+                                <agm-direction [origin]="origin" [destination]="destination" [provideRouteAlternatives]="true">
+                                </agm-direction>
+                            </agm-map>
+                        </div>
+
                     </div>
                 </div>
             </div>
-
             <div class="row col-md-12">
                 <table mat-table [dataSource]="quotations" class="mat-elevation-z8 center">
 

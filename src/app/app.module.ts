@@ -46,6 +46,7 @@ import { CreateShipmentComponent } from './customer/ManageShipments/create-shipm
 import { ManageShipmentComponent } from './customer/ManageShipments/manage-shipment/manage-shipment.component';
 import { ViewShipmentComponent } from './customer/ManageShipments/view-shipment/view-shipment.component';
 
+
 // services
 import { UserService } from './services/user.service';
 import { DiscussService } from './services/discuss.service';
@@ -73,6 +74,9 @@ import { DisplayShipmentComponent } from './transporter/ManageShipment/display-s
 import { FindShipmentComponent } from './transporter/ManageShipment/find-shipment/find-shipment.component';
 import { MakeQuotationComponent } from './transporter/ManageShipment/make-quotation/make-quotation.component';
 import { ManageQuotationComponent } from './transporter/ManageShipment/manage-quotation/manage-quotation.component';
+import { LiveTrackingComponent } from './navigation/live-tracking/live-tracking.component';
+import { EditShipmentComponent } from './customer/ManageShipments/edit-shipment/edit-shipment.component';
+
 
 
 
@@ -111,7 +115,10 @@ const routes: Routes = [
   { path: 'customer/shipment', component: ManageShipmentComponent , canActivate: [AuthGuard]},
   { path: 'customer/shipment/create', component: CreateShipmentComponent , canActivate: [AuthGuard]},
   { path: 'customer/shipment/:id', component: ViewShipmentComponent , canActivate: [AuthGuard]},
+  { path: 'customer/shipment/edit/:id', component: EditShipmentComponent , canActivate: [AuthGuard]},
 
+  // Navigation
+  { path: 'livetracking', component: LiveTrackingComponent , canActivate: [AuthGuard]},
 
   //Transporter
   { path: 'transporter/shipment/display/:id', component: DisplayShipmentComponent, canActivate: [AuthGuard] },
@@ -187,6 +194,8 @@ const routes: Routes = [
     FindShipmentComponent,
     MakeQuotationComponent,
     ManageQuotationComponent,
+    LiveTrackingComponent,
+    EditShipmentComponent,
 
 
   ],

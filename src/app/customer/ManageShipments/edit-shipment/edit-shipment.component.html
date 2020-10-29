@@ -1,0 +1,96 @@
+<div id="wrapper">
+    <app-header></app-header>
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        Add Shipments<small></small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li class="active">
+                            <i class="fa fa-dashboard"></i> &nbsp; Shipment
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-edit"></i> Edit
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="row" *ngIf="data">
+                <div class="col-lg-6">
+                    <form [formGroup]="dataForm" (ngSubmit)="onUpdate()">
+
+                        <div class="form-group">
+                            <label>Shipment Name</label>
+                            <input class="form-control" formControlName="shipmentName" type='text' required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Shipment Type</label>
+                            <input class="form-control" formControlName="shipmentType" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Budget</label>
+                            <input class="form-control" type='text' formControlName="budget" required>
+                            <div class="input_info text-muted well well-sm">
+                                <ul>
+                                    <li>After Accepting Quotation You can not changed Budget.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Pick Up Address</label>
+                            <div class=" input-group ">
+                                <span class="input-group-addon"> <i class="fa fa-map-marker" style="color: green; font-size: 20px;"></i></span>
+                                <input class="form-control" type='text' name="fCollection" formControlName="fromCollection" ngx-google-places-autocomplete (onAddressChange)="AddressChange($event)" placeholder="Search Nearest Location" required>
+                                <div class="input_info text-muted well well-sm">
+                                    <ul>
+                                        <li>After Accepting Quotation You can not changed Collection Address.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Shiping Address</label>
+                            <div class=" input-group">
+                                <span class="input-group-addon"> <i class="fa fa-map-marker" style="color:red; font-size: 20px;"></i></span>
+                                <input class="form-control" type='text' name="tDelivery" formControlName="toDelivery" ngx-google-places-autocomplete (onAddressChange)="AddressChange1($event)" placeholder="Delivery Postcode or Town" required>
+
+                            </div>
+                        </div>
+                        <label>Prefferd Delivery Timeframe</label>
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <div class=" input-groupdate" id="datetimepicker3">
+                                <input class="form-control" type="date" [min]="currentDate" formControlName="startDate" name="startDate" required>
+                                <div class="input_info text-muted well well-sm">
+                                    <ul>
+                                        <li>After Accepting Quotation You can not changed Picking Date.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <div class=" input-groupdate" id="datetimepicker3">
+                                <input class="form-control" type="date" [min]="currentDate" formControlName="endDate" name="endDate" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                <button type="submit" class="btn btn-success" style="width: 100px" [disabled]=" !dataForm.valid ">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

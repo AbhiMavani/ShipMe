@@ -28,6 +28,7 @@ var Ranking = require('./Data/Model/ranking');
 var Like = require('./Data/Model/likes');
 var Quotation = require('./Data/Model/quotation');
 var Test = require('./Data/Model/test');
+var LivePath = require('./Data/Model/livepath');
 
 
 
@@ -93,7 +94,7 @@ passport.use(new localStrategy({ usernameField: 'user_name' },
                 // Unknown user
                 else if (!user)
                     return done(null, false, { message: 'username is not registered' });
-                // Wrong password 
+                // Wrong password
                 else if (!user.verifyPassword(password))
                     return done(null, false, { message: 'Wrong password.' })
                         // Authentication succeeded
@@ -757,6 +758,7 @@ app.post('/addshipment', upload.single('file'), function(req, res) {
         endDate: req.body.endDate,
         fromCollection: req.body.fromCollection,
         toDelivery: req.body.toDelivery,
+        shipmentStatus: req.body.shipmentStatus,
     });
     obj.shipmentImage = file1;
 
@@ -785,9 +787,9 @@ app.get('/problems', function(req, res) {
 
 /// To get all Shipments
 app.get('/shipments', function(req, res) {
-    Shipment.find({}, function(error, data) {
+    Shipment.find({ shipmentStatus: "pending" }, function(error, data) {
         if (!error) {
-            //console.log(res);
+            console.log(data);
             return res.send(data);
         } else {
             console.log("oh my god");
@@ -836,6 +838,17 @@ app.get('/quotation/:shipmentCode', function(req, res) {
     });
 });
 
+app.get('/transporterQuotation/:transporterId', function(req, res) {
+
+    Quotation.find({ transporterId: req.params.transporterId, status: { $ne: "completed" } }, function(error, data) {
+        if (!error) {
+            return res.send(data);
+        }
+        console.log("my god");
+        con
+        return res.send(error);
+    });
+});
 
 
 app.post('/quotation', function(req, res) {
@@ -869,9 +882,114 @@ app.post('/quotation', function(req, res) {
     });
 });
 
+app.delete('/deleteQuotation', function(req, res) {
+
+    Quotation.deleteOne({ transporterId: req.query.transporterId, shipmentCode: req.query.shipmentCode }, function(error, upque) {
+        if (error) {
+            console.log("Error in deleting the quotation : " + error);
+            res.status(422).send(['Something went wrong.']);
+        }
+        return res.status(200).send({ "message": "Deleted" });
+    });
+});
+
+app.delete('/deleteShipment', function(req, res) {
+
+    Shipment.deleteOne({ shipmentCode: req.query.shipmentCode }, function(error, upque) {
+        if (error) {
+            console.log("Error in deleting the Shipment: " + error);
+            res.status(422).send(['Something went wrong.']);
+        }
+        return res.status(200).send({ "message": "Deleted" });
+    });
+});
+
+app.put('/acceptQuotation', function(req, res) {
+    Quotation.countDocuments({ shipmentCode: req.body.shipmentCode, status: "accepted" }, function(err, count) {
+        if (count > 0) {
+            return res.status(409).send(['You have already accepted the quotation']);
+        }
+
+        let data = {
+            status: "accepted"
+        };
+
+        var query = { 'transporterId': req.body.transporterId, 'shipmentCode': req.body.shipmentCode };
+
+        Quotation.updateOne(query, data, function(err, doc) {
+            if (err) { console.log(err); return res.status(500).send(['Quotation Accepting failed']); }
+        });
+
+        Shipment.updateOne({ 'shipmentCode': req.body.shipmentCode }, { shipmentStatus: "accepted" }, function(err, doc) {
+            if (err) { console.log(err); return res.status(500).send(['Quotation Accepting failed']); }
+        });
+
+        return res.status(200).send({ "message": "Quotation Accepted" });
+
+    });
+
+});
+
+app.put('/completeShipment', function(req, res) {
+
+    var user_name;
+    let data = {
+        status: "completed"
+    };
+
+    var query = { 'transporterId': req.body.transporterId, 'shipmentCode': req.body.shipmentCode };
+
+    Quotation.updateOne(query, data, function(err, doc) {
+        if (err) { console.log(err); return res.status(500).send(['Quotation Accepting failed']); }
+    });
+
+    Shipment.updateOne({ 'shipmentCode': req.body.shipmentCode }, { shipmentStatus: "completed" }, function(err, doc) {
+        if (err) { console.log(err); return res.status(500).send(['Quotation Accepting failed']); }
+    });
+
+    Shipment.findOne({ 'shipmentCode': req.body.shipmentCode }, function(err, doc) {
+        if (err) { console.log(err); return res.status(500).send(['Quotation Accepting failed']); }
+        user_name = doc.user_name;
+
+        User.findOne({ user_name: doc.user_name },
+            (err, user) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send(err);
+                }
+                if (!user)
+                    return res.status(404).json({ status: false, message: 'User record not found.' });
+                else {
+                    var transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: {
+                            user: 'ShipMeSDP@gmail.com',
+                            pass: 'ShipMe@123'
+                        }
+                    });
+
+                    var mailOptions = {
+                        from: 'ShipMeSDP@gmail.com',
+                        to: 'greatthor0572@gmail.com',
+                        subject: 'Your quotation is accepted ' + req.body.transporterId,
+                        html: '<p>Hello ' + doc.user_name + ',</p><br><p>Your shipment <b>' + req.body.shipmentCode + '</b> have been delivered by transporter by <b>' + req.body.transporterId + '</b> .</p><br><p>Thankyou for using Shipment</p><p>-Admin</p>'
+                    };
+
+
+                    transporter.sendMail(mailOptions, function(error, info) {
+
+                    });
+                }
+            }
+        );
+    });
+    return res.status(200).send({ "message": "Quotation Accepted" });
+
+
+});
+
 
 app.put("/quotation", function(req, res) {
-    console.log("this is for edting ");
     let data = {
         shipmentCode: req.body.shipmentCode,
         transporterId: req.body.transporterId,
@@ -883,10 +1001,6 @@ app.put("/quotation", function(req, res) {
 
     var query = { 'transporterId': req.body.transporterId, 'shipmentCode': req.body.shipmentCode };
 
-    // Quotation.findOne(query,data,function(err,doc){
-    //   if(err) {console.log(err);return res.status(500).send(['editing quotation failed']);}
-    //   else
-    // });
 
     Quotation.updateOne(query, data, function(err, doc) {
         if (err) { console.log(err); return res.status(500).send(['editing quotation failed']); }
@@ -896,11 +1010,46 @@ app.put("/quotation", function(req, res) {
 });
 
 
-app.get('/quotationForEdit', function(req, res) {
+app.get('/completedShipment', function(req, res) {
 
-    // console.log(req.originalUrl);
+    var query = { transporterId: req.query.transporterId, status: "completed" }
+
+    Quotation.find(query, function(error, data) {
+        if (!error) {
+            return res.send(data);
+        }
+        console.log("Oh my God");
+        return res.send(error);
+    });
+});
+
+
+app.put('/shipment', function(req, res) {
+    let data = {
+        shipmentName: req.body.shipmentName,
+        shipmentCode: req.body.shipmentCode,
+        shipmentType: req.body.shipmentType,
+        budget: req.body.budget,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
+        fromCollection: req.body.fromCollection,
+        toDelivery: req.body.toDelivery,
+    };
+
+    var query = { 'shipmentCode': req.body.shipmentCode };
+
+    Shipment.updateOne(query, data, function(err, doc) {
+        if (err) { console.log(err); return res.status(500).send(['editing shipment failed']); }
+        return res.status(200).send({ "message": "Shipment edited successfully" + req.body.shipmentCode });
+    });
+
+});
+
+
+
+
+app.get('/quotationForEdit', function(req, res) {
     Quotation.findOne({ transporterId: req.query.transporterId, shipmentCode: req.query.shipmentCode }, function(error, data) {
-        //console.log(contestData);
         if (!error) {
             return res.send(data);
 
@@ -910,10 +1059,23 @@ app.get('/quotationForEdit', function(req, res) {
         }
     });
 });
+
+app.get('/shipmentForEdit', function(req, res) {
+
+    Shipment.findOne({ shipmentCode: req.query.shipmentCode }, function(error, data) {
+        if (!error) {
+            return res.send(data);
+
+        } else {
+            console.log("oh my god");
+            return res.send(error);
+        }
+    });
+});
+
 
 app.get('/quotation', function(req, res) {
     Quotation.find({}, function(error, data) {
-        //console.log(contestData);
         if (!error) {
             return res.send(data);
         } else {
@@ -922,6 +1084,93 @@ app.get('/quotation', function(req, res) {
         }
     });
 });
+
+app.put("/finishQuotation", function(req, res) {
+    let data = {
+        status: "completed"
+    };
+
+    var query = { 'transporterId': req.body.transporterId, 'shipmentCode': req.body.shipmentCode };
+
+    Quotation.updateOne(query, data, function(err, doc) {
+        if (err) { console.log(err); return res.status(500).send(['editing quotation failed']); }
+        return res.status(200).send({ "message": "Quotation edited successfully" + req.body.shipmentCode });
+    });
+
+});
+
+
+
+app.post('/sendNotification', function(req, res) {
+
+    User.findOne({ user_name: req.body.transporterId },
+        (err, user) => {
+            if (!user)
+                return res.status(404).json({ status: false, message: 'User record not found.' });
+            else {
+                var transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: 'ShipMeSDP@gmail.com',
+                        pass: 'ShipMe@123'
+                    }
+                });
+                var link = 'http://localhost:4200/transporter/shipment/view-quotation';
+                var mailOptions = {
+                    from: 'ShipMeSDP@gmail.com',
+                    to: 'greatthor0572@gmail.com',
+                    subject: 'Your quotation is accepted ' + req.body.transporterId,
+                    html: '<p>Hello ' + req.body.transporterId + ',</p><br><p>Your quotation for shipment  <b>' + req.body.shipmentCode + '</b> have been accepted. You can view it on manage <a href="' + link + '"> shipment panel </a> of the Shipme Dashboard.</p><br><p>Thankyou for using Shipment</p><p>-Admin</p>'
+                };
+
+                transporter.sendMail(mailOptions, function(error, info) {});
+                return res.status(200).send({});
+            }
+        }
+    );
+
+});
+
+app.get('/location', function(req, res) {
+
+    var filter = {
+        user_name: req.query.transporterId,
+        shipmentCode: req.query.shipmentCode
+    }
+    LivePath.findOne(filter, function(error, data) {
+        if (!error) {
+            return res.send(data);
+        } else {
+            console.log("oh my god");
+            return res.send(error);
+        }
+    });
+});
+
+
+app.post('/location', function(req, res) {
+
+    var filter = {
+        user_name: req.body.transporterId,
+        shipmentCode: req.body.shipmentCode
+    }
+    var update = {
+        lat: req.body.lat,
+        lng: req.body.lng
+    }
+
+    LivePath.findOneAndUpdate(filter, update, { new: true, upsert: true }, function(error, doc) {
+        if (error) {
+            res.status(422).send([error]);
+        } else {
+            res.status(200).send({ "message": "Location Updated Successfull" });
+        }
+    });
+
+
+
+});
+
 
 
 

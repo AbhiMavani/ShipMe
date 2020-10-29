@@ -109,11 +109,10 @@ export class MakeQuotationComponent implements OnInit {
 
 
     if(this.editBoolean){
-        console.log("This is for editing");
         this._dataService.editQuotation(this.dataForm.value).subscribe(
           status => {
             this.toastr.success('Quotation Edited successfuly');
-            // this.router.navigate( [ '/home'] );
+            this.router.navigate( [ '/home'] );
           },
           error => {
             this.toastr.error(error.error[0]);
@@ -121,11 +120,10 @@ export class MakeQuotationComponent implements OnInit {
         );
     }
     else{
-      console.log("This is not for editing");
       this._dataService.postQuotation(this.dataForm.value).subscribe(
         status => {
           this.toastr.success('Quotation Added successfuly');
-          // this.router.navigate( [ '/home'] );
+          this.router.navigate( [ '/home'] );
         },
         error => {
           this.toastr.error(error.error[0]);

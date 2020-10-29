@@ -40,6 +40,7 @@ export class CreateShipmentComponent implements OnInit {
     shipmentImage:new FormControl(' '),
     startDate:new FormControl(''),
     endDate:new FormControl(' '),
+    shipmentStatus:new FormControl(''),
   });
   defFile;
   isNotLogin = true;
@@ -112,6 +113,7 @@ export class CreateShipmentComponent implements OnInit {
         this.toastr.error('Please upload Shipment Image');
       }
     } else {
+      this.dataForm.get('shipmentStatus').setValue('pending');
       formData.append('user_name', this.userId);
         formData.append('file', this.dataForm.get('shipmentImage').value);
         formData.append('shipmentCode',this.dataForm.get('shipmentCode').value);
@@ -122,6 +124,7 @@ export class CreateShipmentComponent implements OnInit {
         formData.append('toDelivery',this.dataForm.get('toDelivery').value);
         formData.append('startDate',this.dataForm.get('startDate').value);
         formData.append('endDate',this.dataForm.get('endDate').value);
+        formData.append('shipmentStatus',this.dataForm.get('shipmentStatus').value);
       };
       
       this._dataService.postShipment(formData).subscribe(

@@ -39,9 +39,11 @@ export class UserProfileComponent implements OnInit {
                 this.router.navigateByUrl('/home');
             }
         );
-        this._dataService.getSolutionHistoryById(this.userId).subscribe(
+        this._dataService.getShipmentHistory({transporterId : this.userId}).subscribe(
             res => {
                 this.solutionHistory = res;
+                console.log("****************");
+                console.log(res);
 
             },
             err => {

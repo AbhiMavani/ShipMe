@@ -5,11 +5,13 @@ import { UserService } from '../../../services/user.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AgmDirectionModule } from 'agm-direction';
 import {HttpClient} from '@angular/common/http';
-import { Shipment } from 'src/app/Class/shipment';
+import { Quotation, Shipment } from 'src/app/Class/shipment';
 import { Router, ActivatedRoute} from '@angular/router';
 import { Observable } from 'rxjs';
 import { Location } from './Location';
 import { stringify } from 'querystring';
+import { MatTableDataSource } from '@angular/material';
+import { ToastrService } from 'ngx-toastr';
 
 declare global {
     interface Window { StripeCheckout: any; }
@@ -23,6 +25,7 @@ declare global {
 export class ViewShipmentComponent implements OnInit {
 
   private userId;
+  private userType;
   private isNotLogin = true;
   private code : string;
   data : any;
@@ -37,14 +40,19 @@ export class ViewShipmentComponent implements OnInit {
   private geoCoder;
   tmp:any;
   tmp1:any;
-   
   public ori : Location;
   public origin: any;
   public destination: any;
 
+  public isAccepted=false;
+  public acceptedTransporter="";
+
+  displayedColumns: string[] = ['transporter', 'services', 'amount', 'accept'];
+  quotations: MatTableDataSource<Quotation>;
+
   constructor(private _dataService: DataService,
      private router: Router,private route: ActivatedRoute,private sanitizer: DomSanitizer,
-    private _userService: UserService,private mapsAPILoader: MapsAPILoader,
+    private _userService: UserService,private toastr: ToastrService,private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone) {
 
         this.code = this.route.snapshot.paramMap.get('id');
@@ -66,7 +74,8 @@ export class ViewShipmentComponent implements OnInit {
     if (this._userService.isLoggedIn()){
       this.userId = this._userService.getUserPayload().user_name;
       this.isNotLogin = false;
-
+      this.userType = this._userService.getUserPayload().userType;
+      // console.log(this._userService.getUserPayload());
     }
 
     this._dataService.getShipment(this.code).subscribe(
@@ -74,15 +83,49 @@ export class ViewShipmentComponent implements OnInit {
         this.data = status;
         this.user_photo =  this.sanitizer.bypassSecurityTrustResourceUrl('data:' + this.data.shipmentImage.contentType + ';base64,' + this.arrayBufferToBase64(this.data.shipmentImage.image.data));
         this.data.imgURL = this.user_photo;
+
+        this._dataService.getQuotationByShipment(this.data.shipmentCode).subscribe(
+
+          quotes =>{
+
+              quotes.forEach(element => {
+
+                  if(element.status=="accepted"){
+                    this.isAccepted = true;
+                    this.acceptedTransporter = element.transporterId;
+                  }
+                  
+                  // if(this.isAccepted == true){
+                  //   t
+                  // }
+                  
+                  element.stringServices = ' ';
+                  element.services.forEach(service => {
+                      
+                      element.stringServices+= " " + service + " ,";
+                  });
+                  element.stringServices = element.stringServices.slice(0, -1);
+              });
+
+              console.log("###########");
+              console.log(quotes);
+              this.quotations = new MatTableDataSource<Quotation>(quotes);
+          },
+          error => {}
+        );
+
         this.after1();
+        // console.log(this.data);
       },
       err => {}
     );
+
+
   }
   after1() {
     // this.origin = this.data.fromCollection;
     // this.destination = this.data.toDelivery;
-    this.mapsAPILoader.load().then(() => {  
+    this.mapsAPILoader.load().then(() => {
       this.geoCoder = new google.maps.Geocoder;
       console.log("here ....com " + this.data.fromCollection);
       var tmp = this.data.fromCollection;
@@ -99,9 +142,9 @@ export class ViewShipmentComponent implements OnInit {
     });
     console.log(this.data.shipmentName);
   }
-  
 
-  
+
+
   private setCurrentLocation() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -113,8 +156,42 @@ export class ViewShipmentComponent implements OnInit {
       {maximumAge:0, timeout:5000, enableHighAccuracy: true});
     }
   }
-      
 
+
+  onShipmentSelect(data){
+    console.log(data);
+    this._userService.sendNotification({shipmentCode: data.shipmentCode, transporterId: data.transporterId}).subscribe();
+    this._dataService.acceptQuotation({shipmentCode: data.shipmentCode, transporterId: data.transporterId}).subscribe(
+      status=>{
+        this.toastr.success(status["message"]);
+
+      },
+      error=>{
+        this.toastr.error(error.error[0]);
+      }
+    );
+    window.location.reload();
+
+  }
+      
+  editShipment(shipment){
+    console.log("Event Creted");
+    console.log(shipment);
+    this.router.navigate(['/customer/shipment/edit', shipment.shipmentCode]);
+  }
+
+  deleteShipment(data){
+      this._dataService.deleteShipment({shipmentCode: data.shipmentCode}).subscribe(
+        status => {
+          this.router.navigate(['customer/shipment']);
+          this.toastr.success('Shipment Deleted successfuly');
+        },
+        error => {
+          this.toastr.error("Error while deleting");
+        }
+      );
+      //window.location.reload();
+  }
 
 
   // pay(amount) {   

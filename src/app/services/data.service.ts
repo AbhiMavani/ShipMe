@@ -91,17 +91,31 @@ export class DataService {
     return this._http.get<any>(environment.apiEndPoint + '/quotation/' + shipmentCode);
   }
 
+  getQuotationByUser(transporterId){
+    return this._http.get<any>(environment.apiEndPoint + '/transporterQuotation/' + transporterId);
+  }
+
   getQuotationForEdit(data){
     console.log(data);
     return this._http.get<any>(environment.apiEndPoint + '/quotationForEdit', {params : data});
   }
 
+  getShipmentForEdit(data){
+    console.log(data);
+    return this._http.get<any>(environment.apiEndPoint + '/shipmentForEdit', {params : data});
+  }
+
   editQuotation(formData){
     return this._http.put<any>(environment.apiEndPoint + '/quotation', formData);
- 
+
   }
- 
- 
+
+  editShipment(formData){
+    //console.log("This is services" + formData.get('shipmentCode'));
+    return this._http.put<any>(environment.apiEndPoint + '/shipment', formData);
+  }
+
+
   postQuotation(formData){
     return this._http.post<any>(environment.apiEndPoint + '/quotation', formData);
   }
@@ -110,6 +124,47 @@ export class DataService {
     return this._http.get<any>(environment.apiEndPoint + '/quotation');
   }
 
+  deleteQuotation(data){
+    // console.log(data);
+    return this._http.delete<any>(environment.apiEndPoint.concat('/deleteQuotation'),{params : data});
+  }
+
+  deleteShipment(data){
+    // console.log(data);
+    return this._http.delete<any>(environment.apiEndPoint.concat('/deleteShipment'),{params : data});
+  }
+
+  acceptQuotation(data){
+    console.log(data);
+    return this._http.put<any>(environment.apiEndPoint.concat('/acceptQuotation'), data);
+  }
+
+  completeShipment(data){
+    console.log(data);
+    return this._http.put<any>(environment.apiEndPoint.concat('/completeShipment'), data);
+  }
+
+  getShipmentHistory(data){
+    console.log(data);
+    return this._http.get<any>(environment.apiEndPoint.concat('/completedShipment'), {params : data});
+  }
+
+  postLocation(data){
+    console.log(data);
+    return this._http.post<any>(environment.apiEndPoint.concat('/location'),data);
+  }
+
+  getLocation(data){
+    console.log(data);
+    return this._http.get<any>(environment.apiEndPoint.concat('/location'),{params : data});
+  }
+
+  finishQuotation(data){
+    console.log(data);
+    return this._http.put<any>(environment.apiEndPoint.concat('/finishQuotation'), data);
+  
+  }
+  
 
 
 
@@ -139,7 +194,7 @@ export class DataService {
             if (status == google.maps.GeocoderStatus.OK) {
               console.log('Geocoding complete!');
               observer.next({
-                lat: results[0].geometry.location.lat(), 
+                lat: results[0].geometry.location.lat(),
                 lng: results[0].geometry.location.lng()
               });
             } else {
