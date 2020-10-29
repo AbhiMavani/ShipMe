@@ -310,7 +310,6 @@ app.post('/getRankList', function(req, res) {
                     Finalresult.push(groupField1);
                     i1++;
                     if (i1 == result.length) {
-                        // console.log(Finalresult);
                         return res.send(Finalresult);
                     }
                 })
@@ -739,11 +738,9 @@ app.post('/addproblem', function(req, res) {
 
 
 app.post('/addshipment', upload.single('file'), function(req, res) {
-    //console.log(req.body);
     var img = fs.readFileSync(req.file.path);
     var encode_image = img.toString('base64');
     // Define a JSONobject for the image attributes for saving to database
-    console.log(req);
     var file1 = {
         contentType: req.file.mimetype,
         image: new Buffer(encode_image, 'base64')
@@ -789,7 +786,6 @@ app.get('/problems', function(req, res) {
 app.get('/shipments', function(req, res) {
     Shipment.find({ shipmentStatus: "pending" }, function(error, data) {
         if (!error) {
-            console.log(data);
             return res.send(data);
         } else {
             console.log("oh my god");
@@ -866,10 +862,7 @@ app.post('/quotation', function(req, res) {
                 status: req.body.status
             });
 
-            console.log(data);
-
             data.save(function(error, doc) {
-                // console.log(req.body.shipmentCode);
                 if (!error)
                     res.status(200).send({ "message": "Quotation added successfully" + req.body.shipmentCode });
                 else {
