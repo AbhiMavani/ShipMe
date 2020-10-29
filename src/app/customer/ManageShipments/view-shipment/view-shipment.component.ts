@@ -49,6 +49,7 @@ export class ViewShipmentComponent implements OnInit {
 
   displayedColumns: string[] = ['transporter', 'services', 'amount', 'accept'];
   quotations: MatTableDataSource<Quotation>;
+  public isCompleted = false;
 
   constructor(private _dataService: DataService,
      private router: Router,private route: ActivatedRoute,private sanitizer: DomSanitizer,
@@ -87,17 +88,17 @@ export class ViewShipmentComponent implements OnInit {
         this._dataService.getQuotationByShipment(this.data.shipmentCode).subscribe(
 
           quotes =>{
-
+            console.log(quotes);
               quotes.forEach(element => {
 
                   if(element.status=="accepted"){
                     this.isAccepted = true;
                     this.acceptedTransporter = element.transporterId;
+                  }else if(element.status=="completed"){
+                    this.isCompleted = true;
+                    this.isAccepted = false;
+                    this.acceptedTransporter = element.transporterId;
                   }
-                  
-                  // if(this.isAccepted == true){
-                  //   t
-                  // }
                   
                   element.stringServices = ' ';
                   element.services.forEach(service => {

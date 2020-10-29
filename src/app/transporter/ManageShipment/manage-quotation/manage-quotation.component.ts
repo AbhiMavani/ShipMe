@@ -121,7 +121,7 @@ export class ManageQuotationComponent implements OnInit {
 
   onShipmentSelect(data) {
     console.log("Event Creted");
-    this.router.navigate(['/customer/shipment', data.shipmentCode]);
+    this.router.navigate(['/transporter/shipment/display', data.shipmentCode]);
   }
 
   editQuotation(data){
