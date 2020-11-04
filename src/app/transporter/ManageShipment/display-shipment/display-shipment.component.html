@@ -31,8 +31,15 @@
                                 <div class="card-text"><strong>Customer : &nbsp;</strong><a href="#">{{data.user_name | uppercase}}</a></div>
 
                                 <div class="card-text">
-                                    <span><strong>Origin :</strong> &emsp; {{data.fromCollection | titlecase}}</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span><strong>Origin :</strong> &emsp; {{data.fromCollection | titlecase}}</span>
+                                </div>
+
+                                <div class="card-text">
                                     <span><strong>Destination : </strong>{{data.toDelivery | titlecase}}</span>
+                                </div>
+
+                                <div class="card-text">
+                                    <span><strong>Budget : </strong>₹ {{data.budget | titlecase}}</span>
                                 </div>
 
                                 <div class="card-text"><strong>Start Date : &nbsp;</strong>{{data.startDate }}</div>

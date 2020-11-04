@@ -39,8 +39,8 @@ export class RegistrationComponent implements OnInit {
       this.userService.postUser(user).subscribe(
         res => {
           this.toastr.success('Registration Complete');
-          this.userService.setToken(res['token']);
-          this.router.navigate(['/home']);
+          //this.userService.setToken(res['token']);
+          this.router.navigate(['/login']);
         },
         err => {
           if (err.status = 422) {

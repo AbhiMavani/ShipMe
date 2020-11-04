@@ -963,7 +963,7 @@ app.put('/completeShipment', function(req, res) {
 
                     var mailOptions = {
                         from: 'ShipMeSDP@gmail.com',
-                        to: 'greatthor0572@gmail.com',
+                        to: 'abhimavani2407@gmail.com',
                         subject: 'Your quotation is accepted ' + req.body.transporterId,
                         html: '<p>Hello ' + doc.user_name + ',</p><br><p>Your shipment <b>' + req.body.shipmentCode + '</b> have been delivered by transporter by <b>' + req.body.transporterId + '</b> .</p><br><p>Thankyou for using Shipment</p><p>-Admin</p>'
                     };
@@ -1111,7 +1111,7 @@ app.post('/sendNotification', function(req, res) {
                 var link = 'http://localhost:4200/transporter/shipment/view-quotation';
                 var mailOptions = {
                     from: 'ShipMeSDP@gmail.com',
-                    to: 'greatthor0572@gmail.com',
+                    to: 'abhimavani2407@gmail.com',
                     subject: 'Your quotation is accepted ' + req.body.transporterId,
                     html: '<p>Hello ' + req.body.transporterId + ',</p><br><p>Your quotation for shipment  <b>' + req.body.shipmentCode + '</b> have been accepted. You can view it on manage <a href="' + link + '"> shipment panel </a> of the Shipme Dashboard.</p><br><p>Thankyou for using Shipment</p><p>-Admin</p>'
                 };

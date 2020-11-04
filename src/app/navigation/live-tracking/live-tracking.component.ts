@@ -40,7 +40,7 @@ export class LiveTrackingComponent implements OnInit {
   private transporterId;
 
   private data;
-
+  private shipmentData;
 
   constructor(private _dataService: DataService,
     private router: Router,private route: ActivatedRoute,private sanitizer: DomSanitizer,
@@ -52,6 +52,8 @@ export class LiveTrackingComponent implements OnInit {
     console.log(this.shipmentCode);
     console.log(this.transporterId);
 
+
+
   }
 
   ngOnInit() {
@@ -60,7 +62,28 @@ export class LiveTrackingComponent implements OnInit {
       this.userId = this._userService.getUserPayload().user_name;
       this.isNotLogin = false;
       this.userType = this._userService.getUserPayload().userType;
-      // console.log(this._userService.getUserPayload());
+      console.log(this._userService.getUserPayload());
+      this._dataService.getShipment(this.shipmentCode).subscribe(
+        status =>{
+          this.shipmentData = status;
+          console.log("################################################");
+          console.log(this.shipmentData.toDelivery);
+          this.mapsAPILoader.load().then(() => {
+            this.geoCoder = new google.maps.Geocoder;
+
+            this._dataService.geocodeAddress(this.shipmentData.fromCollection).subscribe((ori:Location) => {
+
+              console.log("Origin.. " + ori.lng);
+              this.origin = {lat : ori.lat, lng: ori.lng};
+            });
+            this._dataService.geocodeAddress(this.shipmentData.toDelivery).subscribe((des:Location) => {
+              console.log("Destination " + des.lat);
+              this.destination = {lat : des.lat, lng: des.lng};
+            });
+           this.setCurrentLocation();
+          });
+        }
+      );
     }
 
     this.setCurrentLocation();
@@ -70,19 +93,8 @@ export class LiveTrackingComponent implements OnInit {
   after1() {
     // this.origin = this.data.fromCollection;
     // this.destination = this.data.toDelivery;
-    this.mapsAPILoader.load().then(() => {
-      this.geoCoder = new google.maps.Geocoder;
 
-      this._dataService.geocodeAddress('Surat').subscribe((ori:Location) => {
-        console.log("Origin.. " + ori.lng);
-        this.origin = {lat : ori.lat, lng: ori.lng};
-      });
-      this._dataService.geocodeAddress('Bharuch').subscribe((des:Location) => {
-        console.log("Destination " + des.lat);
-        this.destination = {lat : des.lat, lng: des.lng};
-      });
-     this.setCurrentLocation();
-    });
+
   }
 
   private setCurrentLocation() {
@@ -114,7 +126,7 @@ export class LiveTrackingComponent implements OnInit {
 
   updateLocation(){
 
-    if(this.userType == "Transporter" && false){
+    if(this.userType == "Transporter"){
       this.setCurrentLocation();
       this.data = {
         shipmentCode : this.shipmentCode ,
