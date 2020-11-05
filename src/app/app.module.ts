@@ -76,6 +76,8 @@ import { MakeQuotationComponent } from './transporter/ManageShipment/make-quotat
 import { ManageQuotationComponent } from './transporter/ManageShipment/manage-quotation/manage-quotation.component';
 import { LiveTrackingComponent } from './navigation/live-tracking/live-tracking.component';
 import { EditShipmentComponent } from './customer/ManageShipments/edit-shipment/edit-shipment.component';
+import { AccountVerifiedComponent } from './authentication/account-verified/account-verified.component';
+import { EmailSentComponent } from './authentication/email-sent/email-sent.component';
 
 
 
@@ -90,10 +92,12 @@ const routes: Routes = [
   { path: 'contest/:id/submit/:pid', component: CompileAndRunComponent },
 
   // User  authentication
-  {path:'regiuser', component:RegiUserComponent},
+  { path: 'regiuser', component:RegiUserComponent},
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'upload', component: UploadComponent },
+  { path: 'activated', component: AccountVerifiedComponent},
+  { path: 'activateAccount', component: EmailSentComponent},
 
   // User Profile
   { path: 'profile', component: ProfileComponent , canActivate: [AuthGuard]},
@@ -196,6 +200,8 @@ const routes: Routes = [
     ManageQuotationComponent,
     LiveTrackingComponent,
     EditShipmentComponent,
+    AccountVerifiedComponent,
+    EmailSentComponent,
 
 
   ],

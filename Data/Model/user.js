@@ -22,6 +22,9 @@ var userSchema = new mongoose.Schema({
         required: 'EmailID can\'t be empty',
         unique: true
     },
+    isActivated: {
+        type: String,
+    },
     mobile_no: {
         type: String
     },
@@ -75,7 +78,7 @@ userSchema.methods.verifyPassword = function(password) {
 };
 
 userSchema.methods.generateJwt = function() {
-    return jwt.sign({ _id: this._id, role: this.role, user_name: this.user_name, userType: this.userType }, "SECRET#123", { expiresIn: "60m" });
+    return jwt.sign({ _id: this._id, role: this.role, user_name: this.user_name, userType: this.userType, activated: this.activated }, "SECRET#123", { expiresIn: "60m" });
 }
 
 module.exports = mongoose.model('User', userSchema);

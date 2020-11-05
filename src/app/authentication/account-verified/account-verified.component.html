@@ -1,0 +1,20 @@
+<div id="wrapper">
+    <app-header></app-header>
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="center_div ">
+                <br>
+                <form #signUpForm="ngForm" class="well " (ngSubmit)="registerUser(signUpForm.value)">
+
+                    <h2 class="text-left" style="color:white;"> <img src="../../../assets/images/true.png" width="30" height="30">&nbsp;<span>Account Verified Successfully..</span></h2>
+
+                    <p class="text-left" style="color:white;">Click here to Login.. <a [routerLink]="['/login']"><i class="fa fa-fw fa-edit"></i> Login</a> </p>
+
+                </form>
+            </div>
+            <!-- card.// -->
+
+
+        </div>
+    </div>
+</div>

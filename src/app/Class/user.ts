@@ -16,4 +16,5 @@ export class User {
     vehical_type: String;
     liscence: String;
     capacity: String;
+    
 }

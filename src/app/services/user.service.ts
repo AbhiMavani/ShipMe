@@ -43,6 +43,11 @@ export class UserService {
     return this.http.get(environment.apiEndPoint + '/userProfile');
   }
 
+  getActivatedAccount(data) {
+    console.log("Mavani" + data.token);
+    return this.http.get(environment.apiEndPoint + '/activateAccount',{headers: {'token' : data.token, 'NoAuth' : 'True'}});
+  }
+
   getUserProfileById(data) {
     return this.http.get<any>(environment.apiEndPoint.concat('/profileById'), {headers : {'userid' : data, 'NoAuth' : 'True' }});
   }

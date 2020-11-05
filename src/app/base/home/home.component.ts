@@ -8,7 +8,7 @@ import * as $ from 'jquery';
 })
 export class HomeComponent implements OnInit {
  
-  public countCustomer;
+  public countCustomer=100;
   public countTransporter;
   public countListing;
 

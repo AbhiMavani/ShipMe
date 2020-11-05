@@ -29,6 +29,7 @@ var Like = require('./Data/Model/likes');
 var Quotation = require('./Data/Model/quotation');
 var Test = require('./Data/Model/test');
 var LivePath = require('./Data/Model/livepath');
+const { decode } = require('punycode');
 
 
 
@@ -199,6 +200,9 @@ app.post('/authenticate', function(req, res) {
     // Check for user
     User.findOne({ user_name: username1 }, function(err, user) {
         if (err) return res.send(err);
+        if (user.isActivated == "No") {
+            return res.status(422).json({ message: 'Your Account is not Verified Please Verify..' });
+        }
         if (!user) {
             return res.status(404).json({ status: false, message: 'User record not found.' });
         }
@@ -227,23 +231,70 @@ app.post('/registration', function(req, res) {
                 } else {
                     // Now we can save user
                     if (req.body.userType == "Transporter") {
-                        var userdata = new User({ 'user_name': req.body.user_name, 'first_name': req.body.first_name, 'last_name': req.body.last_name, 'email_id': req.body.email_id, 'mobile_no': req.body.mobile_no, 'gender': req.body.gender, 'birth_date': null, 'role': "user", 'city': null, 'state': null, 'password': password = req.body.password, 'userType': userType = req.body.userType, 'liscence': liscence = req.body.liscence, 'vehical_type': vehical_type = req.body.vehical_type, 'capacity': capicity = req.body.capacity });
+                        var userdata = new User({ 'user_name': req.body.user_name, 'first_name': req.body.first_name, 'last_name': req.body.last_name, 'email_id': req.body.email_id, 'mobile_no': req.body.mobile_no, 'gender': req.body.gender, 'birth_date': null, 'role': "user", 'city': null, 'state': null, 'password': password = req.body.password, 'userType': userType = req.body.userType, 'liscence': liscence = req.body.liscence, 'vehical_type': vehical_type = req.body.vehical_type, 'capacity': capicity = req.body.capacity, 'isActivated': activated = "No", });
 
                     } else {
-                        var userdata = new User({ 'user_name': req.body.user_name, 'first_name': req.body.first_name, 'last_name': req.body.last_name, 'email_id': req.body.email_id, 'mobile_no': req.body.mobile_no, 'gender': req.body.gender, 'birth_date': null, 'role': "user", 'city': null, 'state': null, 'password': password = req.body.password, 'userType': userType = req.body.userType, 'address': address = req.body.address });
+                        var userdata = new User({ 'user_name': req.body.user_name, 'first_name': req.body.first_name, 'last_name': req.body.last_name, 'email_id': req.body.email_id, 'mobile_no': req.body.mobile_no, 'gender': req.body.gender, 'birth_date': null, 'role': "user", 'city': null, 'state': null, 'password': password = req.body.password, 'userType': userType = req.body.userType, 'address': address = req.body.address, 'isActivated': isActivated = "No", });
                     }
-
+                    console.log(req.body);
                     userdata.save((err, doc) => {
                         if (!err)
-                            return res.status(200).json({ "token": userdata.generateJwt() });
+                            console.log('Done');
+                        //return res.status(200).json({ "token": userdata.generateJwt() });
                         else {
                             console.log('error');
                         }
                     });
+
+                    const token = userdata.generateJwt();
+                    var transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: {
+                            user: 'ShipMeSDP@gmail.com',
+                            pass: 'ShipMe@123'
+                        }
+                    });
+                    var link = 'http://localhost:4200/activated?token=';
+                    var mailOptions = {
+                        from: 'ShipMeSDP@gmail.com',
+                        to: 'abhimavani2407@gmail.com',
+                        subject: 'Account Activation Requried ' + req.body.user_name,
+                        html: '<html><h4>Please verify your account by<a href="' + link + token + '"> click here</a>...</h4><br><p>Thank You..<br><p>-Admin</p><p>ShipMe</p></html>'
+                    };
+
+                    transporter.sendMail(mailOptions, function(error, info) {
+                        if (error)
+                            return res.status(400).json({ message: "Something Went Wrong " });
+                    });
+                    return res.status(200).send({});
+
+
                 }
             });
         }
     });
+});
+
+//Activate Account through Email
+app.get('/activateAccount', function(req, res) {
+    const token = req.headers.token;
+    if (token) {
+        jwt.verify(token, "SECRET#123",
+            (err, decoded) => {
+                if (err || decoded == undefined) {
+                    return res.status(500).send({ auth: false, message: 'Incorrect or Expired link.' });
+                } else {
+                    User.updateOne({ _id: decoded._id }, { $set: { isActivated: "Yes" } }, function(err) {
+                        if (err) return res.send(err);
+                        else return res.status(200).json({ status: true, message: 'Registration Done successfully.' });
+                    });
+                }
+            }
+        )
+
+    } else {
+        return res.json({ error: "Something Went Wrong in Email Verification!!" });
+    }
 });
 
 app.post('/updatePersonalDetail', verifyJwtToken, function(req, res) {

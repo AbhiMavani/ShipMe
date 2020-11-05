@@ -40,7 +40,7 @@ export class RegistrationComponent implements OnInit {
         res => {
           this.toastr.success('Registration Complete');
           //this.userService.setToken(res['token']);
-          this.router.navigate(['/login']);
+          this.router.navigate(['/activateAccount']);
         },
         err => {
           if (err.status = 422) {
