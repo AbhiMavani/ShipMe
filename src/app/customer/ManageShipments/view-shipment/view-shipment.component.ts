@@ -90,7 +90,6 @@ export class ViewShipmentComponent implements OnInit {
         this._dataService.getQuotationByShipment(this.data.shipmentCode).subscribe(
 
           quotes =>{
-            console.log(quotes);
               quotes.forEach(element => {
 
                   if(element.status=="accepted"){
@@ -162,7 +161,7 @@ export class ViewShipmentComponent implements OnInit {
 
 
   onShipmentSelect(data){
-    console.log(data);
+    //console.log(data);
     this._userService.sendNotification({shipmentCode: data.shipmentCode, transporterId: data.transporterId}).subscribe();
     this._dataService.acceptQuotation({shipmentCode: data.shipmentCode, transporterId: data.transporterId}).subscribe(
       status=>{
@@ -199,17 +198,14 @@ export class ViewShipmentComponent implements OnInit {
   showReceipt(data) {
     this._dataService.getReceipt(data.shipmentCode).subscribe(
       status => {
-        console.log(status);
         this.pdfData = status;
-
         this.user_pdf =  this.sanitizer.bypassSecurityTrustResourceUrl('data:' + this.pdfData.ackReceipt.contentType + ';base64,' + this.arrayBufferToBase64(this.pdfData.ackReceipt.receiptPDF.data));
         var dataURI = "data:application/pdf;base64," +this.arrayBufferToBase64(this.pdfData.ackReceipt.receiptPDF.data);
-        //var dataURI = this.user_pdf;
-        window.open(dataURI);
-
+        var win = window.open();
+        win.document.write('<iframe src="' + dataURI  + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
       },
       err => {
-
+        this.toastr.error("Unable to load Invoice file.");
       }
     );
   }

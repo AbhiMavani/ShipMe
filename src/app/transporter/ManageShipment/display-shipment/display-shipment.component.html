@@ -42,8 +42,8 @@
                                     <span><strong>Budget : </strong>₹ {{data.budget | titlecase}}</span>
                                 </div>
 
-                                <div class="card-text"><strong>Start Date : &nbsp;</strong>{{data.startDate }}</div>
-                                <div class="card-text"><strong>End Date : &nbsp;</strong>{{data.endDate }}</div>
+                                <div class="card-text"><strong>Start Date : &nbsp;</strong>{{data.startDate | date:"dd-MM-yyyy" }}</div>
+                                <div class="card-text"><strong>End Date : &nbsp;</strong>{{data.endDate | date:"dd-MM-yyyy"}}</div>
 
                                 <div class="mybtn card-text">
                                     <div class="btn btn-primary" (click)="onShipmentSelect()">Make Quotations</div>

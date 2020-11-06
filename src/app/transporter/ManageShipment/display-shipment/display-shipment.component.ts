@@ -87,14 +87,14 @@ export class DisplayShipmentComponent implements OnInit {
               });
 
 
-              console.log(quotes);
+              //console.log(quotes);
               this.quotations = new MatTableDataSource<Quotation>(quotes);
           },
           error => {}
         );
 
 
-        console.log(this.data);
+        //console.log(this.data);
         this.after1();
       },
       err => {}

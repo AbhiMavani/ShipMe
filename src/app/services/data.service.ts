@@ -155,15 +155,28 @@ export class DataService {
   }
 
   getLocation(data){
-    console.log(data);
+    //console.log(data);
     return this._http.get<any>(environment.apiEndPoint.concat('/location'),{params : data});
   }
 
   finishQuotation(data){
-    console.log(data);
+    //console.log(data);
     return this._http.put<any>(environment.apiEndPoint.concat('/finishQuotation'), data);
-  
   }
+
+  addDrivers(data){
+    return this._http.put<any>(environment.apiEndPoint.concat('/addDrivers'), data);
+  }
+ 
+  getDrivers(data){
+    return this._http.get<any>(environment.apiEndPoint.concat('/getDrivers'),{params : data});
+  }
+ 
+  deleteDriver(data){
+    return this._http.delete<any>(environment.apiEndPoint.concat('/deleteDriver'),{params : data});
+  }
+
+
 
   uploadReceipt(data){
     console.log("Abhi.. " + data);

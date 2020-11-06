@@ -67,7 +67,7 @@
                         <!-- Symbol Column -->
                         <ng-container matColumnDef="date">
                             <th mat-header-cell *matHeaderCellDef> Date </th>
-                            <td mat-cell *matCellDef="let data"> {{data.endDate}} </td>
+                            <td mat-cell *matCellDef="let data"> {{data.endDate | date:"dd-MM-yyyy" }} </td>
                         </ng-container>
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

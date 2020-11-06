@@ -1,0 +1,131 @@
+<div id="wrapper">
+    <app-header></app-header>
+    <div id="page-wrapper">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        Add Shipments<small></small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li class="active">
+                            <i class="fa fa-dashboard"></i> &nbsp; Shipments
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-plus"></i> Generate Invoice
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+
+            <!-- ;
+          public budget;
+          public comment;
+          public ;
+   
+          public shipmentType;
+          public startDate;
+          public status;
+          public ; -->
+
+
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <input class="form-control disabled" [(ngModel)]="user_name" type='text' disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Transporter Name</label>
+                        <input class="form-control disabled" [(ngModel)]="transporterId" type='text' disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Shipment Name</label>
+                        <input class="form-control disabled" [(ngModel)]="shipmentName" type='text' disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Shipment Type</label>
+                        <input class="form-control disabled" [(ngModel)]="shipmentType" type='text' disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Pick Up</label>
+                        <input class="form-control disabled" [(ngModel)]="fromCollection" type='text' disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Drop</label>
+                        <input class="form-control disabled" [(ngModel)]="toDelivery" type='text' disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input class="form-control disabled" [(ngModel)]="amount" type='text' disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Services</label>
+                        <input class="form-control disabled" [(ngModel)]="services" type='text' disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Drop</label>
+                        <input class="form-control disabled" [(ngModel)]="toDelivery" type='text' disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Shipment Code</label>
+                        <input class="form-control disabled" [(ngModel)]="shipmentCode" type='text' disabled>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <div class="input-groupdate" id="datetimepicker3">
+                            <input class="form-control" type="date" [(ngModel)]="startDate" [min]="currentDate" name="startDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Estimated Delivery date</label>
+                        <div class=" input-groupdate" id="datetimepicker3">
+                            <input class="form-control" type="date" [(ngModel)]="endDate" [min]="currentDate" name="endDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sel1">Driver</label>
+                        <select class="form-control" id="sel1" #driverselect (change)="driverSelection(driverselect.value)">
+                    <option>--Select Driver--</option>
+                    <option *ngFor="let driver of driverList" [value]="driver.name">{{driver.name}}</option>
+                  </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Liscence</label>
+                        <input class="form-control disabled" [(ngModel)]="liscence" type='text' disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone No.</label>
+                        <input class="form-control disabled" [(ngModel)]="phoneNo" type='text' disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Vehical No.</label>
+                        <input class="form-control" [(ngModel)]="vehicalNo" type='text'>
+                    </div>
+
+                    <div class="form-group">
+                        <button (click)="download()" style="margin-bottom: 20px;" class="btn btn-success">Generate</button>
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>

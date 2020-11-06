@@ -59,13 +59,10 @@
                     <ng-container matColumnDef="edit">
                         <th mat-header-cell *matHeaderCellDef>Change</th>
                         <td mat-cell *matCellDef="let data">
-                            <button (click)="startLiveLocation(data)" class="btn btn-primary" *ngIf="data.status=='accepted' ">Start</button>
+                            <button (click)="startLiveLocation(data)" class="btn btn-primary" *ngIf="data.status=='accepted' ">Start</button>&nbsp;&nbsp;
+                            <button (click)="generateInvoice(data)" class="btn btn-warning" *ngIf="data.status=='accepted' ">Generate</button>
                             <button (click)="editQuotation(data)" class="btn btn-primary" *ngIf="data.status=='pending' ">Edit</button>&nbsp;&nbsp;
                             <button (click)="deleteQuotation(data)" class="btn btn-danger" *ngIf="data.status=='pending'">Delete</button>&nbsp;&nbsp;
-                            <label class="btn btn-warning" style="margin-left: 5px;" *ngIf="data.status=='accepted' "><i
-                                class="glyphicon glyphicon-search"></i> Upload Receipt
-                                <input type="file" (change)="onFileSelect($event,data)" accept="application/*" required/>
-                            </label>
                         </td>
                     </ng-container>
 

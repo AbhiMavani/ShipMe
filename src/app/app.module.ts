@@ -79,6 +79,7 @@ import { EditShipmentComponent } from './customer/ManageShipments/edit-shipment/
 import { AccountVerifiedComponent } from './authentication/account-verified/account-verified.component';
 import { EmailSentComponent } from './authentication/email-sent/email-sent.component';
 import { ManageDriverComponent } from './transporter/ManageShipment/manage-driver/manage-driver.component';
+import { GenerateInvoiceComponent } from './transporter/ManageShipment/generate-invoice/generate-invoice.component';
 
 
 
@@ -130,6 +131,13 @@ const routes: Routes = [
   { path: 'transporter/shipment/find', component: FindShipmentComponent, canActivate: [AuthGuard] },
   { path: 'transporter/shipment/quotation', component: MakeQuotationComponent, canActivate: [AuthGuard] },
   { path: 'transporter/shipment/view-quotation', component: ManageQuotationComponent, canActivate: [AuthGuard] },
+  { path: 'transporter/drivers', component: ManageDriverComponent, canActivate: [AuthGuard] },
+  { path: 'transporter/invoice', component: GenerateInvoiceComponent, canActivate: [AuthGuard] },
+
+
+
+
+
   // practice
   { path: 'practice', component: PracticeComponent },
   // Admin Problem
@@ -204,6 +212,7 @@ const routes: Routes = [
     AccountVerifiedComponent,
     EmailSentComponent,
     ManageDriverComponent,
+    GenerateInvoiceComponent,
 
 
   ],

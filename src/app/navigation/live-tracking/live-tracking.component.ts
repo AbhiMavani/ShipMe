@@ -1,5 +1,6 @@
 import { MapsAPILoader } from '@agm/core';
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -41,6 +42,9 @@ export class LiveTrackingComponent implements OnInit {
 
   private data;
   private shipmentData;
+  dataForm = new FormGroup({
+    ackReceipt :new FormControl(' '),
+  });
 
   constructor(private _dataService: DataService,
     private router: Router,private route: ActivatedRoute,private sanitizer: DomSanitizer,
@@ -62,22 +66,22 @@ export class LiveTrackingComponent implements OnInit {
       this.userId = this._userService.getUserPayload().user_name;
       this.isNotLogin = false;
       this.userType = this._userService.getUserPayload().userType;
-      console.log(this._userService.getUserPayload());
+      //console.log(this._userService.getUserPayload());
       this._dataService.getShipment(this.shipmentCode).subscribe(
         status =>{
           this.shipmentData = status;
-          console.log("################################################");
-          console.log(this.shipmentData.toDelivery);
+          //console.log("################################################");
+          //console.log(this.shipmentData.toDelivery);
           this.mapsAPILoader.load().then(() => {
             this.geoCoder = new google.maps.Geocoder;
 
             this._dataService.geocodeAddress(this.shipmentData.fromCollection).subscribe((ori:Location) => {
 
-              console.log("Origin.. " + ori.lng);
+              //console.log("Origin.. " + ori.lng);
               this.origin = {lat : ori.lat, lng: ori.lng};
             });
             this._dataService.geocodeAddress(this.shipmentData.toDelivery).subscribe((des:Location) => {
-              console.log("Destination " + des.lat);
+              //console.log("Destination " + des.lat);
               this.destination = {lat : des.lat, lng: des.lng};
             });
            this.setCurrentLocation();
@@ -148,6 +152,28 @@ export class LiveTrackingComponent implements OnInit {
         status =>{
           this.lat = status.lat;
           this.lng = status.lng;
+        }
+      );
+    }
+  }
+
+  onFileSelect(event,data) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      //console.log(data);
+      this.dataForm.get('ackReceipt').setValue(file);
+      const formData = new FormData();
+      formData.append('file', this.dataForm.get('ackReceipt').value);
+      formData.append('user_name',data.user_name);
+      formData.append('shipmentCode',data.shipmentCode);
+      this._dataService.uploadReceipt(formData).subscribe(
+        res => {
+          this.toastr.info(res.message);
+          location.reload();
+        },
+        err => {
+          this.toastr.error(err);
+          location.reload();
         }
       );
     }

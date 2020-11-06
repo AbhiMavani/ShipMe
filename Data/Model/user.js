@@ -24,6 +24,7 @@ var userSchema = new mongoose.Schema({
     },
     isActivated: {
         type: String,
+        default: "No"
     },
     mobile_no: {
         type: String
@@ -63,6 +64,11 @@ var userSchema = new mongoose.Schema({
     liscence: {
         type: String,
     },
+    drivers: {
+        type: Array(Object),
+    }
+
+
 
 });
 

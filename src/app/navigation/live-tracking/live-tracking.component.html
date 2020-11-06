@@ -22,6 +22,10 @@
             <div class="row">
                 <button (click)="updateLocation()" style="margin-bottom: 20px;" class="btn btn-success">Update</button>
                 <button (click)="finishQuotation()" style="margin-bottom: 20px; margin-left: 10px;" class="btn btn-success">Finish</button>
+                <label class="btn btn-success" style="margin-left: 10px;margin-bottom: 20px;"><i
+                    class="glyphicon glyphicon-search"></i> Upload Receipt
+                    <input type="file" (change)="onFileSelect($event,shipmentData)" accept="application/*" required/>
+                </label>
             </div>
 
             <div class="row">

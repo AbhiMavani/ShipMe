@@ -201,7 +201,7 @@ app.post('/authenticate', function(req, res) {
     // Check for user
     User.findOne({ user_name: username1 }, function(err, user) {
         if (err) return res.send(err);
-        if (user.isActivated == "No") {
+        if (user.isActivated === "No") {
             return res.status(422).json({ message: 'Your Account is not Verified Please Verify..' });
         }
         if (!user) {
@@ -237,10 +237,9 @@ app.post('/registration', function(req, res) {
                     } else {
                         var userdata = new User({ 'user_name': req.body.user_name, 'first_name': req.body.first_name, 'last_name': req.body.last_name, 'email_id': req.body.email_id, 'mobile_no': req.body.mobile_no, 'gender': req.body.gender, 'birth_date': null, 'role': "user", 'city': null, 'state': null, 'password': password = req.body.password, 'userType': userType = req.body.userType, 'address': address = req.body.address, 'isActivated': isActivated = "No", });
                     }
-                    console.log(req.body);
                     userdata.save((err, doc) => {
                         if (!err)
-                            console.log('Done');
+                            console.log();
                         //return res.status(200).json({ "token": userdata.generateJwt() });
                         else {
                             console.log('error');
@@ -870,7 +869,7 @@ app.get('/shipments', function(req, res) {
             return res.send(error);
         }
 
-    });
+    }).sort({ startDate: -1 });
 });
 
 /// To get Shipment By Customer ID
@@ -881,7 +880,7 @@ app.get('/getShipmentById', function(req, res) {
         } else {
             return res.send(error);
         }
-    }).sort({ DateTime: -1 });
+    }).sort({ startDate: -1 });
 });
 
 //shipment by code
@@ -912,6 +911,54 @@ app.get('/getReceiptbyCode/:shipmentCode', function(req, res) {
 
 /* Transporter#########################################################*/
 
+
+
+app.get('/getDrivers', function(req, res) {
+
+    User.findOne({ user_name: req.query.user_name }, function(error, data) {
+        if (!error) {
+            return res.send(data.drivers);
+        }
+        console.log("error in /getDrivers");
+        return res.send(error);
+    });
+});
+
+app.put('/addDrivers', function(req, res) {
+
+    flag = true;
+    User.findOne({ user_name: req.body.user_name }, function(err, user) {
+
+        user.drivers.forEach(element => {
+            if (element.liscence == req.body.liscence) {
+                flag = false;
+                return res.status(422).send(["Driver with this liscence already exist with name : " + element.name]);
+            }
+        });
+
+        if (flag) {
+            User.findOneAndUpdate({ user_name: req.body.user_name }, { $push: { drivers: { "name": req.body.name, "liscence": req.body.liscence, "phoneNo": req.body.phoneNo } } }, { new: true }, function(error, doc) {
+
+                if (error) { console.log("error in /addDrivers :: " + error); return res.status(422).send(error); } else return res.status(200).send(doc.drivers);
+
+            });
+        }
+    });
+});
+
+app.delete('/deleteDriver', function(req, res) {
+
+    User.updateOne({ user_name: req.query.user_name }, { $pull: { "drivers": { liscence: req.query.liscence } } }, function(err, status) {
+        if (err) {
+            return res.status(422).send([err])
+        }
+    });
+
+    return res.status(200).send(["request successfully"]);
+});
+
+
+
 app.get('/quotation/:shipmentCode', function(req, res) {
 
     Quotation.find({ shipmentCode: req.params.shipmentCode }, function(error, data) {
@@ -920,8 +967,10 @@ app.get('/quotation/:shipmentCode', function(req, res) {
         }
         console.log("Oh my God");
         return res.send(error);
-    });
+    }).sort({ amount: 1 });
 });
+
+
 
 app.get('/transporterQuotation/:transporterId', function(req, res) {
 

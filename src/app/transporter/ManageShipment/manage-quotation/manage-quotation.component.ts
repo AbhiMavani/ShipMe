@@ -158,26 +158,55 @@ export class ManageQuotationComponent implements OnInit {
     window.location.reload();
   }
 
-  onFileSelect(event,data) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      //console.log(data);
-      this.dataForm.get('ackReceipt').setValue(file);
-      const formData = new FormData();
-      formData.append('file', this.dataForm.get('ackReceipt').value);
-      formData.append('user_name',data.user_name);
-      formData.append('shipmentCode',data.shipmentCode);
-      this._dataService.uploadReceipt(formData).subscribe(
-        res => {
-          this.toastr.info(res.message);
-          location.reload();
-        },
-        err => {
-          this.toastr.error(err);
-          location.reload();
-        }
-      );
-    }
+  // onFileSelect(event,data) {
+  //   if (event.target.files.length > 0) {
+  //     const file = event.target.files[0];
+  //     //console.log(data);
+  //     this.dataForm.get('ackReceipt').setValue(file);
+  //     const formData = new FormData();
+  //     formData.append('file', this.dataForm.get('ackReceipt').value);
+  //     formData.append('user_name',data.user_name);
+  //     formData.append('shipmentCode',data.shipmentCode);
+  //     this._dataService.uploadReceipt(formData).subscribe(
+  //       res => {
+  //         this.toastr.info(res.message);
+  //         location.reload();
+  //       },
+  //       err => {
+  //         this.toastr.error(err);
+  //         location.reload();
+  //       }
+  //     );
+  //   }
+  // }
+
+   
+generateInvoice(data){
+  console.log(data);
+  var serv = '';
+  data.services.forEach(element => {
+    serv+=element+"-";
+  });
+  console.log(data.shipmentName);
+  var combinedData = {
+    amount : data.amount,
+    budget: data.budget,
+    fromCollection: data.fromCollection,
+    shipmentCode : data.shipmentCode,
+    services: serv,
+    shipmentName: data.shipmentName,
+    shipmentType: data.shipmentType,
+    startDate: data.startDate,
+    status: data.status,
+    toDelivery: data.toDelivery,
+    transporterId: data.transporterId,
+    user_name: data.user_name,
+    comment: data.comment,
   }
+
+  this.router.navigate(['/transporter/invoice'],{queryParams: combinedData});
+}
+
+
 
 }
