@@ -29,6 +29,7 @@ var Like = require('./Data/Model/likes');
 var Quotation = require('./Data/Model/quotation');
 var Test = require('./Data/Model/test');
 var LivePath = require('./Data/Model/livepath');
+var Receipt = require('./Data/Model/receipt');
 const { decode } = require('punycode');
 
 
@@ -820,6 +821,32 @@ app.post('/addshipment', upload.single('file'), function(req, res) {
     });
 });
 
+
+//Upload Acknowledge Receipt
+app.post('/uploadReceipt', upload.single('file'), function(req, res) {
+    var pdfFile = fs.readFileSync(req.file.path);
+    var encode_pdf = pdfFile.toString('base64');
+    // Define a JSONobject for the image attributes for saving to database
+    var file1 = {
+        contentType: req.file.mimetype,
+        receiptPDF: new Buffer(encode_pdf, 'base64')
+    };
+    var obj = new Receipt({
+        user_name: req.body.user_name,
+        shipmentCode: req.body.shipmentCode,
+    });
+    obj.ackReceipt = file1;
+
+    obj.save(function(error, doc) {
+        if (!error)
+            res.status(200).send({ message: "Acknowledge Receipt Uploaded successfully" });
+        else {
+            console.log(error);
+            res.status(422).send([error]);
+        }
+    });
+});
+
 app.get('/problems', function(req, res) {
     Problem.find({}, function(error, data) {
         //console.log(contestData);
@@ -867,7 +894,18 @@ app.get('/shipments/:shipmentCode', function(req, res) {
         console.log("Oh my God");
         return res.send(error);
     });
-})
+});
+
+app.get('/getReceiptbyCode/:shipmentCode', function(req, res) {
+
+    Receipt.findOne({ shipmentCode: req.params.shipmentCode }, function(error, data) {
+        if (!error) {
+            return res.send(data);
+        }
+        console.log("Oh my God");
+        return res.send(error);
+    });
+});
 
 
 

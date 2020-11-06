@@ -29,6 +29,7 @@ export class ViewShipmentComponent implements OnInit {
   private isNotLogin = true;
   private code : string;
   data : any;
+  pdfData: any;
   user_photo: SafeResourceUrl;
 
   handler:any = null;
@@ -50,6 +51,7 @@ export class ViewShipmentComponent implements OnInit {
   displayedColumns: string[] = ['transporter', 'services', 'amount', 'accept'];
   quotations: MatTableDataSource<Quotation>;
   public isCompleted = false;
+  user_pdf: any;
 
   constructor(private _dataService: DataService,
      private router: Router,private route: ActivatedRoute,private sanitizer: DomSanitizer,
@@ -194,6 +196,23 @@ export class ViewShipmentComponent implements OnInit {
       //window.location.reload();
   }
 
+  showReceipt(data) {
+    this._dataService.getReceipt(data.shipmentCode).subscribe(
+      status => {
+        console.log(status);
+        this.pdfData = status;
+
+        this.user_pdf =  this.sanitizer.bypassSecurityTrustResourceUrl('data:' + this.pdfData.ackReceipt.contentType + ';base64,' + this.arrayBufferToBase64(this.pdfData.ackReceipt.receiptPDF.data));
+        var dataURI = "data:application/pdf;base64," +this.arrayBufferToBase64(this.pdfData.ackReceipt.receiptPDF.data);
+        //var dataURI = this.user_pdf;
+        window.open(dataURI);
+
+      },
+      err => {
+
+      }
+    );
+  }
 
   // pay(amount) {   
 

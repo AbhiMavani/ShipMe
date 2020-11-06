@@ -164,6 +164,15 @@ export class DataService {
     return this._http.put<any>(environment.apiEndPoint.concat('/finishQuotation'), data);
   
   }
+
+  uploadReceipt(data){
+    console.log("Abhi.. " + data);
+    return this._http.post<any>(environment.apiEndPoint.concat('/uploadReceipt'), data);
+  }
+
+  getReceipt(data) {
+    return this._http.get<any>(environment.apiEndPoint + '/getReceiptbyCode/' + data);
+  }
   
 
 

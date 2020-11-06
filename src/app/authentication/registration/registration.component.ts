@@ -38,7 +38,7 @@ export class RegistrationComponent implements OnInit {
     if (user.password === this.cpassword ) {
       this.userService.postUser(user).subscribe(
         res => {
-          this.toastr.success('Registration Complete');
+          this.toastr.info('Email Verification mail has been sent. Please Verify your account..');
           //this.userService.setToken(res['token']);
           this.router.navigate(['/activateAccount']);
         },

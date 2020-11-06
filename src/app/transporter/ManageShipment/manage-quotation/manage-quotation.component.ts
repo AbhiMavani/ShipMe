@@ -7,6 +7,7 @@ import { UserService } from 'src/app/services/user.service';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { Shipment,Quotation } from 'src/app/Class/shipment';
 import { MapsAPILoader } from '@agm/core';
+import { FormControl, FormGroup } from '@angular/forms';
 // import { error } from 'console';
 
 @Component({
@@ -23,6 +24,9 @@ export class ManageQuotationComponent implements OnInit {
   userId;
   isNotLogin;
   abhi: String;
+  dataForm = new FormGroup({
+    ackReceipt :new FormControl(' '),
+  });
   displayedColumns: string[] = ['item', 'amount' , 'edit'];
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -152,6 +156,28 @@ export class ManageQuotationComponent implements OnInit {
     
     this._dataService.finishQuotation(data).subscribe();
     window.location.reload();
+  }
+
+  onFileSelect(event,data) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      //console.log(data);
+      this.dataForm.get('ackReceipt').setValue(file);
+      const formData = new FormData();
+      formData.append('file', this.dataForm.get('ackReceipt').value);
+      formData.append('user_name',data.user_name);
+      formData.append('shipmentCode',data.shipmentCode);
+      this._dataService.uploadReceipt(formData).subscribe(
+        res => {
+          this.toastr.info(res.message);
+          location.reload();
+        },
+        err => {
+          this.toastr.error(err);
+          location.reload();
+        }
+      );
+    }
   }
 
 }

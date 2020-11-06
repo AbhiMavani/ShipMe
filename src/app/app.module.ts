@@ -78,6 +78,7 @@ import { LiveTrackingComponent } from './navigation/live-tracking/live-tracking.
 import { EditShipmentComponent } from './customer/ManageShipments/edit-shipment/edit-shipment.component';
 import { AccountVerifiedComponent } from './authentication/account-verified/account-verified.component';
 import { EmailSentComponent } from './authentication/email-sent/email-sent.component';
+import { ManageDriverComponent } from './transporter/ManageShipment/manage-driver/manage-driver.component';
 
 
 
@@ -202,6 +203,7 @@ const routes: Routes = [
     EditShipmentComponent,
     AccountVerifiedComponent,
     EmailSentComponent,
+    ManageDriverComponent,
 
 
   ],
