@@ -104,7 +104,7 @@ export class GenerateInvoiceComponent implements OnInit {
  
       var docDefinition = {
  
-        header: {text: "Invoice" , fontSize : 30 , bold: true,alignment : 'center'},
+        header: {text: "ShipMe Invoice" , fontSize : 30 , bold: true,alignment : 'center'},
  
         content: [
           {
@@ -127,7 +127,7 @@ export class GenerateInvoiceComponent implements OnInit {
                 [ {text: 'Services', bold: true}, this.services ],
                 [ {text: 'Shipment Code', bold: true}, this.shipmentCode ],
                 [ {text: 'Collection Date', bold: true}, this.startDate ],
-                [ {text: 'Etimated Delivery', bold: true}, this.endDate ],
+                [ {text: 'Estimated Delivery', bold: true}, this.endDate ],
                 [ {text: 'Driver Name', bold: true}, this.driverName ],
                 [ {text: 'Liscence No', bold: true}, this.liscence ],
                 [ {text: 'Phone No', bold: true}, this.phoneNo ],

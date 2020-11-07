@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
       },
       err => {
         if(err.status == 422){
-          this.toastr.warning("Your Account is not Verified Please Verify..");
+          this.toastr.warning("Your Account is not Verified Please Verify First..");
         } else{
         this.toastr.error(err.error.message);
         }
