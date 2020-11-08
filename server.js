@@ -35,7 +35,7 @@ const { decode } = require('punycode');
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/codeworld', { useNewUrlParser: true }).then(
+mongoose.connect('mongodb://localhost:27017/codeworld', { useNewUrlParser: true, useUnifiedTopology: true }).then(
     () => { console.log('Database is connected') },
     err => { console.log('Can not connect to the database') }
 );
@@ -201,11 +201,12 @@ app.post('/authenticate', function(req, res) {
     // Check for user
     User.findOne({ user_name: username1 }, function(err, user) {
         if (err) return res.send(err);
-        if (user.isActivated === "No") {
-            return res.status(422).json({ message: 'Your Account is not Verified Please Verify..' });
-        }
         if (!user) {
             return res.status(404).json({ status: false, message: 'User record not found.' });
+        }
+        //Account is Activated or not
+        if (user.isActivated === "No") {
+            return res.status(422).json({ message: 'Your Account is not Verified Please Verify..' });
         }
         // Check for password
         if (password1 == user.password) {
@@ -794,7 +795,7 @@ app.post('/addshipment', upload.single('file'), function(req, res) {
     // Define a JSONobject for the image attributes for saving to database
     var file1 = {
         contentType: req.file.mimetype,
-        image: new Buffer(encode_image, 'base64')
+        image: new Buffer.from(encode_image, 'base64')
     };
     var obj = new Shipment({
         user_name: req.body.user_name,
@@ -828,7 +829,7 @@ app.post('/uploadReceipt', upload.single('file'), function(req, res) {
     // Define a JSONobject for the image attributes for saving to database
     var file1 = {
         contentType: req.file.mimetype,
-        receiptPDF: new Buffer(encode_pdf, 'base64')
+        receiptPDF: new Buffer.from(encode_pdf, 'base64')
     };
     var obj = new Receipt({
         user_name: req.body.user_name,
