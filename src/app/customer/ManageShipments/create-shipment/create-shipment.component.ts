@@ -148,13 +148,11 @@ export class CreateShipmentComponent implements OnInit {
       //setting address from API to local variable 
       this.formattedaddress=address.formatted_address;
       this.dataForm.get('fromCollection').setValue(this.formattedaddress);
-      console.log(this.dataForm.get('fromCollection').value);
     }
     public AddressChange1(address: any) { 
       //setting address from API to local variable 
       this.formattedaddress1=address.formatted_address;
       this.dataForm.get('toDelivery').setValue(this.formattedaddress1);
-      console.log(this.dataForm.get('toDelivery').value);
     }
   }
 

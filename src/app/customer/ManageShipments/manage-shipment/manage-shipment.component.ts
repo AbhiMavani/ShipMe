@@ -89,7 +89,6 @@ export class ManageShipmentComponent implements OnInit {
     }
 
     applyFilter(filterValue: string) {
-      console.log(this.dataSource);
       const tableFilters = [];
       tableFilters.push({
         id: this.filterSelector,
@@ -104,8 +103,6 @@ export class ManageShipmentComponent implements OnInit {
 
 
     onShipmentSelect(shipment) {
-      console.log("Event Creted");
-      console.log(shipment);
       this.router.navigate(['/customer/shipment', shipment.shipmentCode]);
     }
 

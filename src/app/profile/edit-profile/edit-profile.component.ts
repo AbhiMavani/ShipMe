@@ -74,7 +74,6 @@ export class EditProfileComponent implements OnInit {
 
   // After update personal details
   updatePersonal() {
-    console.log(this.model);
     this.userService.updatePersonalDetail(this.model).subscribe(
       res => {
           this.toastr.success('Profile updated successfully');

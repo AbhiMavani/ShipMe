@@ -55,7 +55,7 @@ export class GenerateInvoiceComponent implements OnInit {
       this.currentDate = this.myDate.getFullYear() + '-' + ('0' + (this.myDate.getMonth() + 1)).slice(-2) +
                 '-' + ('0' + this.myDate.getDate()).slice(-2);
 
-                console.log(this.shipmentCode);
+                
   }
  
   private userId;

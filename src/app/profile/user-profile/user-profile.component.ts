@@ -42,9 +42,6 @@ export class UserProfileComponent implements OnInit {
         this._dataService.getShipmentHistory({transporterId : this.userId}).subscribe(
             res => {
                 this.solutionHistory = res;
-                console.log("****************");
-                console.log(res);
-
             },
             err => {
 

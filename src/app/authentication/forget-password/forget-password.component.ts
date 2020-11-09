@@ -26,7 +26,6 @@ export class ForgetPasswordComponent implements OnInit {
 
   // After enter username for reset pssword
   sendCode() {
-        console.log(this.model.user_name);
         this.model.code = String( Math.floor(Math.random() * 900000) + 100000 );
         this.userService.sendForgetPasswordCode(this.model).subscribe(
           res =>{

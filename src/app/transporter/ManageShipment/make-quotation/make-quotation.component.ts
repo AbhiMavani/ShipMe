@@ -67,7 +67,6 @@ export class MakeQuotationComponent implements OnInit {
     {
       this._dataService.getQuotationForEdit({shipmentCode : this.shipmentCode , transporterId : this.transporterCode}).subscribe(
         status => {
-          console.log(status);
           this.dataForm.get('amount').setValue(status.amount);
           this.dataForm.get('comment').setValue(status.comment);
 
@@ -104,7 +103,6 @@ export class MakeQuotationComponent implements OnInit {
     this.dataForm.get('shipmentCode').setValue(this.shipmentCode);
     this.dataForm.get('transporterId').setValue(this.transporterCode);
     this.dataForm.get('status').setValue('pending');
-    console.log(this.dataForm.value);
 
 
 
@@ -140,13 +138,11 @@ export class MakeQuotationComponent implements OnInit {
   {
     if(e.target.checked)
     {
-      console.log(e.target.getAttribute("name"));
 
       this.serviceControl.push(new FormControl(e.target.getAttribute("name")));
     }
     else
     {
-      console.log(e.target.getAttribute("name"));
       this.serviceControl.removeAt(this.serviceControl.value.findIndex(element => element=e.target.getAttribute("name")));
     }
   }

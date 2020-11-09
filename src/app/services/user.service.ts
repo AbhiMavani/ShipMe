@@ -44,7 +44,6 @@ export class UserService {
   }
 
   getActivatedAccount(data) {
-    console.log("Mavani" + data.token);
     return this.http.get(environment.apiEndPoint + '/activateAccount',{headers: {'token' : data.token, 'NoAuth' : 'True'}});
   }
 
@@ -96,8 +95,6 @@ export class UserService {
 
   isLoggedIn() {
       const userPayload = this.getUserPayload();
-      console.log(userPayload);
-      console.log("Customer shit..");
       if (userPayload) {
         if (userPayload.exp > Date.now() / 1000) {
           return userPayload;
@@ -119,8 +116,6 @@ export class UserService {
     }
     isTransporterLoggedIn() {
       const userPayload = this.getUserPayload();
-      console.log("Transpoer shit..");
-      console.log(userPayload);
       if (userPayload) {
         if (userPayload.userType === 'Transporter' && (userPayload.exp > Date.now() / 1000)) {
           return true;

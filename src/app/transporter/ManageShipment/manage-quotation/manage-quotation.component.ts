@@ -114,7 +114,6 @@ export class ManageQuotationComponent implements OnInit {
   private setCurrentLocation() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
-        console.log("This is.. " + position.coords.latitude + " "+ position.coords.longitude + " " + position.coords.accuracy);
         // this.lat = position.coords.latitude;
         // this.lng = position.coords.longitude;
         // this.zoom = 15;
@@ -124,7 +123,6 @@ export class ManageQuotationComponent implements OnInit {
   }
 
   onShipmentSelect(data) {
-    console.log("Event Creted");
     this.router.navigate(['/transporter/shipment/display', data.shipmentCode]);
   }
 
@@ -152,7 +150,6 @@ export class ManageQuotationComponent implements OnInit {
   }
 
   finishQuotation(data){
-    console.log("******************************");
     
     this._dataService.finishQuotation(data).subscribe();
     window.location.reload();
@@ -182,12 +179,10 @@ export class ManageQuotationComponent implements OnInit {
 
    
 generateInvoice(data){
-  console.log(data);
   var serv = '';
   data.services.forEach(element => {
     serv+=element+"-";
   });
-  console.log(data.shipmentName);
   var combinedData = {
     amount : data.amount,
     budget: data.budget,

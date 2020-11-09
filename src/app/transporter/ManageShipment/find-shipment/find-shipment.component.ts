@@ -48,7 +48,6 @@ export class FindShipmentComponent implements OnInit {
 
     this._dataService.getShipments().subscribe(
       status => {
-        console.log(status);
         this.data = status;
         this.dataSource =new MatTableDataSource<Shipment>(status);
         this.dataSource.paginator = this.paginator;;
@@ -81,7 +80,6 @@ export class FindShipmentComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-    console.log(this.dataSource);
     const tableFilters = [];
     tableFilters.push({
       id: this.filterSelector,
@@ -95,7 +93,6 @@ export class FindShipmentComponent implements OnInit {
   }
 
   onShipmentSelect(shipment) {
-    console.log("Event Creted");
     this.router.navigate(['/transporter/shipment/display', shipment.shipmentCode]);
   }
 }

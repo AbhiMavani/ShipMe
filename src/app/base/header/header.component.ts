@@ -51,16 +51,13 @@ export class HeaderComponent implements OnInit {
                 }
             );
         } else if (this.userPayload = this.userService.isLoggedIn()) {
-            console.log("Abhishek,, " + this.userPayload.userType);
             if(this.userPayload.userType === 'Customer'){
-            console.log("Ama avyu....");
                 this.login = true;
                 this.notLogin = false;
                 this.user = true;
                 this.admin = false;
                 this.userTransporter = false;
             } else if(this.userPayload.userType === 'Transporter'){
-                console.log(" trans Ama avyu....");
                     this.login = true;
                     this.notLogin = false;
                     this.user = false;
@@ -75,7 +72,6 @@ export class HeaderComponent implements OnInit {
                 }
             );
         } else if (this.userService.isTransporterLoggedIn()) {
-            console.log("Transpor ma avyu");
             this.login = true;
             this.notLogin = false;
             this.userTransporter = true;
@@ -89,14 +85,12 @@ export class HeaderComponent implements OnInit {
                 }
             );
         } else {
-            console.log("Else ma avyu...");
             this.login = false;
             this.notLogin = true;
             this.user = true;
             this.userTransporter = true;
             this.admin = false;
         }
-        console.log("Custmor : " + this.user + ",Transport: " + this.userTransporter + "Admin: " + this.admin);
     }
 
     // for logout button in name part of header

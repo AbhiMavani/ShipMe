@@ -80,21 +80,18 @@ export class DisplayShipmentComponent implements OnInit {
               quotes.forEach(element => {
                   element.stringServices = ' ';
                   element.services.forEach(service => {
-                      // console.log(service);
                       element.stringServices+= " " + service + " ,";
                   });
                   element.stringServices = element.stringServices.slice(0, -1);
               });
 
 
-              //console.log(quotes);
               this.quotations = new MatTableDataSource<Quotation>(quotes);
           },
           error => {}
         );
 
 
-        //console.log(this.data);
         this.after1();
       },
       err => {}
@@ -106,26 +103,22 @@ export class DisplayShipmentComponent implements OnInit {
     // this.destination = this.data.toDelivery;
     this.mapsAPILoader.load().then(() => {
       this.geoCoder = new google.maps.Geocoder;
-      console.log("here ....com " + this.data.fromCollection);
       var tmp = this.data.fromCollection;
       this._dataService.geocodeAddress(tmp).subscribe((ori:Location) => {
-        console.log("Origin.. " + ori.lng);
         this.origin = {lat : ori.lat, lng: ori.lng};
       });
       var tmp1 = this.data.toDelivery;
       this._dataService.geocodeAddress(tmp1).subscribe((des:Location) => {
-        console.log("Destination " + des.lat);
         this.destination = {lat : des.lat, lng: des.lng};
       });
     //  this.setCurrentLocation();
     });
-    console.log(this.data.shipmentName);
   }
 
   private setCurrentLocation() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
-        console.log("This is.. " + position.coords.latitude + " "+ position.coords.longitude + " " + position.coords.accuracy);
+       
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
         this.zoom = 15;

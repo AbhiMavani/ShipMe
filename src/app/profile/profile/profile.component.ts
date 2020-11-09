@@ -40,7 +40,6 @@ export class ProfileComponent implements OnInit {
   viewFile(data) {
     this._dataService.findAllProblem([data.problemCode]).subscribe(
       status => {
-        console.log(123);
         this.router.navigate(['viewsolution', data.user_name, data._id]);
       }
      );

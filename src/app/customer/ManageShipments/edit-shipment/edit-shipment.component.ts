@@ -52,7 +52,6 @@ export class EditShipmentComponent implements OnInit {
     this._dataService.getShipmentForEdit({shipmentCode : this.shipmentCode}).subscribe(
       status => {
         this.data = status;
-        console.log(status);
         this.budget = this.dataForm.get('budget').value;
         this.fromCollection = status.fromCollection;
         this.startDate = status.startDate;
@@ -73,8 +72,6 @@ export class EditShipmentComponent implements OnInit {
     );
   }
   onShipmentSelect(shipment) {
-    console.log("Event Creted");
-    console.log(shipment);
     this.router.navigate(['/customer/shipment/edit', shipment.shipmentCode]);
   }
   public AddressChange(address: any) { 
@@ -96,7 +93,6 @@ export class EditShipmentComponent implements OnInit {
     this.dataForm.get('toDelivery').setValue(this.dataForm.get('toDelivery').value);
     this.dataForm.get('endDate').setValue(this.dataForm.get('endDate').value);
     this.dataForm.get('startDate').setValue(this.dataForm.get('startDate').value);
-    console.log("#########################################################" + this.budget);
   
   this._dataService.editShipment(this.dataForm.value).subscribe(
     status => {
@@ -107,6 +103,5 @@ export class EditShipmentComponent implements OnInit {
       this.toastr.error(error.error[0]);
     }
   );
-  console.log("onupdate");
   }
 }

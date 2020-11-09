@@ -96,12 +96,10 @@ export class DataService {
   }
 
   getQuotationForEdit(data){
-    console.log(data);
     return this._http.get<any>(environment.apiEndPoint + '/quotationForEdit', {params : data});
   }
 
   getShipmentForEdit(data){
-    console.log(data);
     return this._http.get<any>(environment.apiEndPoint + '/shipmentForEdit', {params : data});
   }
 
@@ -111,7 +109,6 @@ export class DataService {
   }
 
   editShipment(formData){
-    //console.log("This is services" + formData.get('shipmentCode'));
     return this._http.put<any>(environment.apiEndPoint + '/shipment', formData);
   }
 
@@ -125,42 +122,34 @@ export class DataService {
   }
 
   deleteQuotation(data){
-    // console.log(data);
     return this._http.delete<any>(environment.apiEndPoint.concat('/deleteQuotation'),{params : data});
   }
 
   deleteShipment(data){
-    // console.log(data);
     return this._http.delete<any>(environment.apiEndPoint.concat('/deleteShipment'),{params : data});
   }
 
   acceptQuotation(data){
-    console.log(data);
     return this._http.put<any>(environment.apiEndPoint.concat('/acceptQuotation'), data);
   }
 
   completeShipment(data){
-    console.log(data);
     return this._http.put<any>(environment.apiEndPoint.concat('/completeShipment'), data);
   }
 
   getShipmentHistory(data){
-    console.log(data);
     return this._http.get<any>(environment.apiEndPoint.concat('/completedShipment'), {params : data});
   }
 
   postLocation(data){
-    console.log(data);
     return this._http.post<any>(environment.apiEndPoint.concat('/location'),data);
   }
 
   getLocation(data){
-    //console.log(data);
     return this._http.get<any>(environment.apiEndPoint.concat('/location'),{params : data});
   }
 
   finishQuotation(data){
-    //console.log(data);
     return this._http.put<any>(environment.apiEndPoint.concat('/finishQuotation'), data);
   }
 
@@ -179,7 +168,6 @@ export class DataService {
 
 
   uploadReceipt(data){
-    console.log("Abhi.. " + data);
     return this._http.post<any>(environment.apiEndPoint.concat('/uploadReceipt'), data);
   }
 
@@ -193,7 +181,6 @@ export class DataService {
 
 
   private initGeocoder() {
-    console.log('Init geocoder!');
     this.geocoder = new google.maps.Geocoder();
   }
 
@@ -209,18 +196,15 @@ export class DataService {
   // }
 
   geocodeAddress(location: string): Observable<Location> {
-    console.log('Start geocoding!');
     this.geocoder = new google.maps.Geocoder();
         return new Observable(observer => {
           this.geocoder.geocode({'address': location}, (results, status) => {
             if (status == google.maps.GeocoderStatus.OK) {
-              console.log('Geocoding complete!');
               observer.next({
                 lat: results[0].geometry.location.lat(),
                 lng: results[0].geometry.location.lng()
               });
             } else {
-                console.log('Error - ', results, ' & Status - ', status);
                 observer.next({ lat: 0, lng: 0 });
             }
             observer.complete();

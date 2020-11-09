@@ -33,7 +33,6 @@ export class RegistrationComponent implements OnInit {
     user.user_name = user.user_name.trim();
     user.email_id = user.email_id.toLowerCase();
 
-    console.log(user);
     // Check password and confirm password
     if (user.password === this.cpassword ) {
       this.userService.postUser(user).subscribe(
