@@ -87,6 +87,13 @@ export class ManageDriverComponent implements OnInit {
  
   }
   
+  editDriver(driver) {
+    this.name= driver.name;
+    this.liscence = driver.liscence;
+    this.phoneNo = driver.phoneNo;
+    console.log("Event: " + driver.name);
+  }
+
 }
  
  
