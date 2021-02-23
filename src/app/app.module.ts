@@ -236,7 +236,7 @@ const routes: Routes = [
     MatFormFieldModule,
     GooglePlaceModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCy3rHWu9zt5JmGs5fcCdu68mompol3aEs'
+      apiKey: 'Your Google API Key'
     }),
     AgmDirectionModule,
   ],

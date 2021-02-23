@@ -106,6 +106,7 @@ export class CreateShipmentComponent implements OnInit {
 
   onSubmit() {
     this.sCode = (this.userId.trim().concat(this.dataForm.get('shipmentName').value.trim().slice(0,5).toString())).toUpperCase();
+    this.sCode = this.sCode.replace(/\s/g, ""); 
     this.dataForm.get('shipmentCode').setValue(this.sCode);
     const formData = new FormData();  
     if (this.defFile === '') {

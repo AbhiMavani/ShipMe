@@ -1103,7 +1103,7 @@ app.put('/completeShipment', function(req, res) {
                     var mailOptions = {
                         from: 'ShipMeSDP@gmail.com',
                         to: 'abhimavani981@gmail.com',
-                        subject: 'Your quotation is accepted ' + req.body.transporterId,
+                        subject: 'Your Shipment is Delivered: ' + req.body.transporterId,
                         html: '<p>Hello ' + doc.user_name + ',</p><br><p>Your shipment <b>' + req.body.shipmentCode + '</b> have been delivered by transporter by <b>' + req.body.transporterId + '</b> .</p><br><p>Thankyou for using Shipment</p><p>-Admin</p>'
                     };
 

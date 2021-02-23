@@ -20,11 +20,11 @@
             <div class="col-lg-10">
                 <div class="form-group">
                     <label for="email">Name</label>
-                    <input type="text" [(ngModel)]="name" class="form-control" id="email">
+                    <input type="text" [disabled]="editFlag" [(ngModel)]="name" class="form-control" id="email">
                 </div>
                 <div class="form-group">
                     <label for="pwtext">Liscence No</label>
-                    <input type="text" [(ngModel)]="liscence" class="form-control" id="pwd">
+                    <input type="text" [disabled]="editFlag" [(ngModel)]="liscence" class="form-control" id="pwd">
                 </div>
                 <div class="form-group">
                     <label for="pwtext">Phone No</label>
